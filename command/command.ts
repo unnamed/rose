@@ -1,6 +1,6 @@
 import { Message, Permission } from "https://deno.land/x/discordeno/mod.ts";
 
-export type ArgumentParser<T> = (message: Message, args: RestorableArgumentIterator) => T;
+export type ArgumentParser<T> = (message: Message, spec: CommandParameter, args: RestorableArgumentIterator) => T;
 
 export class ParseError extends Error {
 
@@ -17,13 +17,18 @@ export class RestorableArgumentIterator {
   
   constructor(
     private args: string[],
-    private cursor: number = 0
-  ) {}
+    public cursor: number = 0
+  ) {
+  }
+
+  [Symbol.iterator]() {
+    return this;
+  }
 
   next(): { value: string, done: boolean } {
     return {
       value: this.args[this.cursor++],
-      done: this.cursor >= this.args.length
+      done: this.cursor > this.args.length
     };
   }
 
@@ -41,6 +46,7 @@ export class RestorableArgumentIterator {
 export interface CommandParameter {
   name?: string;
   optional?: boolean;
+  infinite?: boolean;
   type: string;
 }
 
@@ -49,8 +55,8 @@ export interface Command {
   name: string;
   category: string;
   description: string;
-  permissions: { use?: Permission[], execute?: Permission[] }
+  permissions?: { use?: Permission[], execute?: Permission[] }
   aliases?: string[];
   arguments?: CommandParameter[];
-  execute: (...args: any[]) => Promise<void>;
+  execute: (...args: any[]) => void;
 }
