@@ -1,5 +1,4 @@
 import { startBot, logger } from "./deps.ts";
-import "https://deno.land/x/dotenv/load.ts";
 
 import onMessage from "./moderation/message.listener.ts";
 

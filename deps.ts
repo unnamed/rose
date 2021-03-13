@@ -1,9 +1,12 @@
 import * as log from "https://deno.land/std/log/mod.ts";
+import "https://deno.land/x/dotenv/load.ts";
+
+const minLevelForConsole: log.LevelName = Deno.env.get("ENVIRONMENT")?.toLowerCase() === "dev" ? "DEBUG" : "INFO";
 
 // logger initialization
 await log.setup({
   handlers: {
-    console: new log.handlers.ConsoleHandler("INFO", {
+    console: new log.handlers.ConsoleHandler(minLevelForConsole, {
       formatter: record => {
         let now = new Date();
         let date = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
@@ -15,7 +18,7 @@ await log.setup({
   },
   loggers: {
     default: {
-      level: "INFO",
+      level: minLevelForConsole,
       handlers: ["console"]
     }
   }

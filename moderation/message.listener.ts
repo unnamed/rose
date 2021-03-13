@@ -1,4 +1,4 @@
-import { Message, DiscordUser } from "../deps.ts";
+import { Message, DiscordUser, logger } from "../deps.ts";
 
 /**
  * Map containing all the user
@@ -9,7 +9,7 @@ import { Message, DiscordUser } from "../deps.ts";
  */
 const warnings = new Map<string, number>();
 
-const subtractDelay = 10_000;
+const subtractDelay = 2_000;
 
 export default function onMessage(message: Message) {
   if (!message.author.bot) {
@@ -25,6 +25,7 @@ export default function onMessage(message: Message) {
       let currentCount: number | undefined = warnings.get(id);
       if (currentCount !== undefined) {
         if (--currentCount < 1) {
+          logger.debug(`Cleared possible spam data of ${message.author.username}`)
           warnings.delete(id);
         } else {
           warnings.set(id, currentCount);
