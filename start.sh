@@ -5,4 +5,4 @@
 ## Deno, the script also adds some
 ## necessary flags to run the bot
 ##
-deno run --allow-env --allow-read --allow-net mod.ts
+deno run --allow-env --allow-read --allow-net --unstable mod.ts
