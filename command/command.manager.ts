@@ -5,7 +5,7 @@ import {
   ParseError, 
   ArgumentParser
 } from "./command.ts";
-import { Message } from "../deps.ts";
+import { Message, botHasPermission, memberIDHasPermission } from "../deps.ts";
 import config from "../config.ts";
 
 const registry = new Map<string, Command>();
@@ -67,11 +67,33 @@ function parse(message: Message, param: CommandParameter, args: RestorableArgume
 }
 
 export async function dispatch(message: Message, args: string[]): Promise<void> {
+
   let commandLabel = args.shift()?.toLowerCase() as string;
   let command: Command | undefined = registry.get(commandLabel) || aliasesRegistry.get(commandLabel);
+  let guild = message.guild;
+  let member = message.member;
 
-  if (!command) {
+  if (!command || !guild || !member) {
     return;
+  }
+
+  if (command.permissions) {
+    let botPermissed = await botHasPermission(guild.id, command.permissions.execute || []);
+    let userPermissed = await memberIDHasPermission(member.id, guild.id, command.permissions.use || []);
+    if (!botPermissed || !userPermissed) {
+      message.channel?.send({
+        embed: {
+          title: "No Permission!",
+          description: "Sorry, the bot or you doesn't have the required permissions to execute/use the command :(",
+          color: config.color,
+          footer: {
+            text: `Executed by ${message.author.username}`,
+            icon_url: guild.iconURL(64, 'png')
+          }
+        }
+      });
+      return;
+    }
   }
 
   let commandArguments = command.arguments || [];

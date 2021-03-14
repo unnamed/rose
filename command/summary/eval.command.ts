@@ -8,6 +8,9 @@ const command: Command = {
   category: "hidden",
   description: "Run anything",
   aliases: ["run"],
+  permissions: {
+    execute: ["ADMINISTRATOR"]
+  },
   arguments: [
     { type: 'message' },
     {
