@@ -22,9 +22,11 @@ if ! [ -f "./.env" ]; then
   exit 0
 fi
 
+FLAGS="--allow-env --allow-read --allow-net --allow-write --unstable"
+
 ##
-## Script used to start the bot using
+## Command used to start the bot using
 ## Deno, the script also adds some
 ## necessary flags to run the bot
 ##
-deno run --allow-env --allow-read --allow-net --allow-write --unstable mod.ts
+deno run $FLAGS mod.ts
