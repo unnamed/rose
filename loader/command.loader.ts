@@ -1,4 +1,4 @@
-import { walkSync } from "https://deno.land/std@0.67.0/fs/mod.ts";
+import { walkSync } from "../deps.ts";
 import { register } from "../command/command.manager.ts";
 import { Command } from "../command/command.ts";
 

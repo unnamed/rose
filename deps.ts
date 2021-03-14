@@ -25,4 +25,5 @@ await log.setup({
 });
 export const logger: log.Logger = log.getLogger();
 
+export * from "https://deno.land/std@0.67.0/fs/mod.ts";
 export * from "https://deno.land/x/discordeno/mod.ts"

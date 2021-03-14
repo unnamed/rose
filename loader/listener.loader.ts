@@ -1,5 +1,4 @@
-import { EventHandlers } from "../deps.ts";
-import { walkSync } from "https://deno.land/std@0.67.0/fs/mod.ts";
+import { EventHandlers, walkSync } from "../deps.ts";
 
 export default async function loadListeners(): Promise<EventHandlers> {
   let handlers: any = {};

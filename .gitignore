@@ -1,7 +1,8 @@
 # editor files
-.vscode
+/.vscode/
 
 # application secrets
 .env
 
-# logs file
+# application data
+/jsondata/
