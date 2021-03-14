@@ -1,16 +1,23 @@
 import { ModerationData } from "./types.ts";
-import { readJson, writeJson, existsSync } from "../deps.ts";
+import { Guild, readJson, writeJson, existsSync, ensureDir } from "../deps.ts";
 
 const jsonDataDir = "./jsondata";
-const filename = jsonDataDir + "/moderations.json";
+const moderationsFolder = jsonDataDir + "/moderations/";
 
-export async function saveModeration(moderation: ModerationData) {
-  let moderations: ModerationData[];
-  if (existsSync(filename)) {
-    moderations = await readJson(filename) as ModerationData[];
+type Moderations = { [target: string]: ModerationData }
+
+export async function saveModeration(guild: Guild, moderation: ModerationData) {
+  await ensureDir(moderationsFolder);
+  let path = moderationsFolder + guild.id + ".json";
+  let moderations: Moderations;
+  if (existsSync(path)) {
+    moderations = (await readJson(path)) as Moderations;
   } else {
-    moderations = [];
+    moderations = {};
   }
-  moderations.push(moderation);
-  await writeJson(filename, moderations);
+  let storedData: any = {...moderation};
+  delete storedData.guild;
+  delete storedData.target;
+  moderations[moderation.target] = storedData;
+  await writeJson(path, moderations);
 }
