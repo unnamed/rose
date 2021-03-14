@@ -4,22 +4,23 @@
 ## Create the .env file from the
 ## .env.template file
 ##
-if ! [ -f "./.env" ]; then
-  echo "################################"
-  echo "## '.env' file doesn't exists ##"
-  echo "## creating an empty '.env'   ##"
-  echo "################################"
+if ! [ -f ".env" ]; then
 
-  # Copy the file
-  cp .env.template .env
-  echo "" # Just a separator
+  echo "##"
+  echo "## '.env' file doesn't exists"
+  echo "## please enter the environment"
+  echo "## variables."
+  echo "##"
 
-  echo "####################################"
-  echo "## A new '.env' file was created, ##"
-  echo "## please fill its properties and ##"
-  echo "## re-run this script             ##"
-  echo "####################################"
-  exit 0
+  for variable in $(cat .env.variables); do
+    ##
+    ## Read the required variables
+    ## and ask the user for them
+    ##
+    echo ">>> Enter the '$variable' value"
+    read -p ">>> " value
+    echo "$variable=$value" >> ".env"
+  done
 fi
 
 FLAGS="--allow-env --allow-read --allow-net --allow-write --unstable"
