@@ -5,6 +5,6 @@ export enum ModerationType {
 
 export interface ModerationData {
   type: ModerationType,
-  expires?: Date
+  expires?: number
 }
 
