@@ -19,7 +19,7 @@ const command: Command = {
       infinite: true
     }
   ],
-  execute: (message: Message, code: string) => {
+  execute: async (message: Message, code: string) => {
 
     if (!config.developers.includes(message.author.id)) {
       throw { heading: "No permission!", description: "Only bot developers can use this command" };

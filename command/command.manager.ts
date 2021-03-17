@@ -5,11 +5,11 @@ import {
   ParseError, 
   ArgumentParser
 } from "./command.ts";
+import { answersCache } from "../storage/mod.ts";
 import { Message, botHasPermission, memberIDHasPermission, Embed } from "../deps.ts";
 import config from "../config.ts";
 
 const registry = new Map<string, Command>();
-const embedResponses = new Map<string, Embed>();
 
 const aliasesRegistry = new Map<string, Command>();
 const argumentProviders = new Map<string, ArgumentParser<any>>();
@@ -28,15 +28,6 @@ argumentProviders.set(
     }
   }
 );
-
-export function registerEmbedResponse(name: string, response: Embed): boolean {
-  let command = registry.get(name) || aliasesRegistry.get(name) || embedResponses.get(name);
-  if (command) {
-    return false;
-  }
-  embedResponses.set(name, response);
-  return true;
-}
 
 export function register(command: Command): void {
   registry.set(command.name, command);
@@ -84,15 +75,15 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
   let guild = message.guild;
   let member = message.member;
 
-  if (!command) {
-    let embedResponse = embedResponses.get(commandLabel);
-    if (embedResponse) {
-      message.channel?.send({ embed: embedResponse });
-    }
+  if (!guild || !member) {
     return;
   }
 
-  if (!guild || !member) {
+  if (!command) {
+    let embedResponse = await answersCache.find([guild.id, commandLabel]);
+    if (embedResponse) {
+      message.channel?.send({ embed: embedResponse });
+    }
     return;
   }
 
@@ -165,9 +156,7 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
     }
   }
 
-  try {
-    command.execute.apply(undefined, parseResult);
-  } catch (err) {
+  command.execute.apply(undefined, parseResult).catch(err => {
     let { heading, description } = err;
     if (heading || description) {
       message.channel?.send({
@@ -182,5 +171,5 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
         }
       });
     } 
-  }
+  });
 }

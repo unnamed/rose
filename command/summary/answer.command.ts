@@ -1,6 +1,6 @@
 import { Command } from "../command.ts";
-import { registerEmbedResponse } from "../command.manager.ts";
-import { Message } from "../../deps.ts";
+import { saveAnswer } from "../../storage/mod.ts";
+import { Message, Guild, Embed } from "../../deps.ts";
 import { validateSchema } from "../../util/mod.ts";
 import config from "../../config.ts";
 
@@ -52,7 +52,7 @@ const command: Command = {
       infinite: true
     }
   ],
-  execute: (message: Message, name: string, response: string) => {
+  execute: async (message: Message, name: string, response: string) => {
     if (!config.developers.includes(message.author.id)) {
       throw { heading: "No permission!", description: "Only bot developers can use this command" };
     }
@@ -67,7 +67,7 @@ const command: Command = {
           heading: "Invalid JSON!",
           description: "The given response doesn't match with the embed schema"
         };
-      } else if (!registerEmbedResponse(name, responseJson)) {
+      } else if (!(await saveAnswer(message.guild as Guild, name, responseJson as Embed, true, true))) {
         throw {
           heading: "Cannot register custom answer",
           description: "A command or embed answer is already registered with the name " + name

@@ -58,5 +58,5 @@ export interface Command {
   permissions?: { use?: Permission[], execute?: Permission[] }
   aliases?: string[];
   arguments?: CommandParameter[];
-  execute: (...args: any[]) => void;
+  execute: (...args: any[]) => Promise<void>;
 }

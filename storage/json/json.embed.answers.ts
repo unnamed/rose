@@ -1,5 +1,18 @@
-import { Embed, Guild, readJson, writeJson, existsSync, ensureDir } from "../../deps.ts";
+import LoadingCollection from "../../collection/loading.collection.ts";
+import { Embed, Guild, cache, readJson, writeJson, existsSync, ensureDir } from "../../deps.ts";
 import { answersDir, getAnswersPath } from "./json.storage.ts";
+
+export const answersCache = new LoadingCollection<[string, string], Embed>(
+  async ([guildId, name]) => {
+    let guild = cache.guilds.get(guildId);
+    if (!guild) {
+      return undefined;
+    } else {
+      return await fetchAnswer(guild, name);
+    }
+  },
+  15000
+);
 
 type Answers = { [name: string]: Embed };
 
@@ -8,7 +21,7 @@ type Answers = { [name: string]: Embed };
  * json file for an answer with the specified
  * name
  */
-export async function searchAnswer(
+export async function fetchAnswer(
   guild: Guild,
   name: string
 ): Promise<Embed | undefined> {
@@ -30,7 +43,8 @@ export async function saveAnswer(
   guild: Guild,
   name: string,
   answer: Embed,
-  override = false 
+  override = false,
+  cache = false
 ): Promise<boolean> {
   
   await ensureDir(answersDir);
@@ -50,6 +64,13 @@ export async function saveAnswer(
   } else {
     answers = {};
     answers[name] = answer;
+  }
+
+  if (cache) {
+    let key: [string, string] = [guild.id, name];
+    if (!answersCache.get(key) || override) {
+      answersCache.set(key, answer);
+    }
   }
 
   // finally write the data
