@@ -5,8 +5,9 @@ import {
   ParseError, 
   ArgumentParser
 } from "./command.ts";
+import { hasPermission } from "./command.util.ts";
 import { answersCache } from "../storage/mod.ts";
-import { Message, botHasPermission, memberIDHasPermission, Embed } from "../deps.ts";
+import { Message, Embed } from "../deps.ts";
 import config from "../config.ts";
 
 export const registry = new Map<string, Command>();
@@ -39,22 +40,6 @@ export function register(command: Command): void {
 export function findCommand(commandLabel: string): Command | undefined {
   commandLabel = commandLabel.toLowerCase();
   return registry.get(commandLabel) || aliasesRegistry.get(commandLabel);
-}
-
-export function getLineRepresentation(parameter: CommandParameter): string {
-  let suffix = parameter.infinite ? "..." : "";
-  if (parameter.optional) {
-    return `[${parameter.name}${suffix}]`;
-  } else {
-    return `<${parameter.name}${suffix}>`;
-  }
-}
-
-export function getUsage(command: Command): string {
-  let usage = "-";
-  usage += command.name + " ";
-  usage += command.arguments?.filter(arg => arg.type !== 'message').map(getLineRepresentation).join(" ");
-  return usage;
 }
 
 function parse(message: Message, param: CommandParameter, args: RestorableArgumentIterator): any {
@@ -108,23 +93,19 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
     return;
   }
 
-  if (command.permissions) {
-    let botPermissed = await botHasPermission(guild.id, command.permissions.execute || []);
-    let userPermissed = await memberIDHasPermission(member.id, guild.id, command.permissions.use || []);
-    if (!botPermissed || !userPermissed) {
-      message.channel?.send({
-        embed: {
-          title: "No Permission!",
-          description: "Sorry, the bot or you doesn't have the required permissions to execute/use the command :(",
-          color: config.color,
-          footer: {
-            text: `Executed by ${message.author.username}`,
-            icon_url: guild.iconURL(64, 'png')
-          }
+  if (!(await hasPermission(message, command))) {
+    message.channel?.send({
+      embed: {
+        title: "No Permission!",
+        description: "Sorry, the bot or you doesn't have the required permissions to execute/use the command :(",
+        color: config.color,
+        footer: {
+          text: `Executed by ${message.author.username}`,
+          icon_url: guild.iconURL(64, 'png')
         }
-      });
-      return;
-    }
+      }
+    });
+    return;
   }
 
   let commandArguments = command.arguments || [];
