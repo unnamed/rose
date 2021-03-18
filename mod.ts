@@ -23,11 +23,6 @@ eventHandlers.ready = () => {
           content: "Hello!"
         }
       });
-      setTimeout(() => {
-        interaction.editResponse({
-          content: "Hi!"
-        });
-      }, 2000);
     }
   )
 
