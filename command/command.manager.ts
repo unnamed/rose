@@ -9,7 +9,7 @@ import { answersCache } from "../storage/mod.ts";
 import { Message, botHasPermission, memberIDHasPermission, Embed } from "../deps.ts";
 import config from "../config.ts";
 
-const registry = new Map<string, Command>();
+export const registry = new Map<string, Command>();
 
 const aliasesRegistry = new Map<string, Command>();
 const argumentProviders = new Map<string, ArgumentParser<any>>();
@@ -34,6 +34,27 @@ export function register(command: Command): void {
   if (command.aliases) {
     command.aliases.forEach(alias => aliasesRegistry.set(alias, command));
   }
+}
+
+export function findCommand(commandLabel: string): Command | undefined {
+  commandLabel = commandLabel.toLowerCase();
+  return registry.get(commandLabel) || aliasesRegistry.get(commandLabel);
+}
+
+export function getLineRepresentation(parameter: CommandParameter): string {
+  let suffix = parameter.infinite ? "..." : "";
+  if (parameter.optional) {
+    return `[${parameter.name}${suffix}]`;
+  } else {
+    return `<${parameter.name}${suffix}>`;
+  }
+}
+
+export function getUsage(command: Command): string {
+  let usage = "-";
+  usage += command.name + " ";
+  usage += command.arguments?.filter(arg => arg.type !== 'message').map(getLineRepresentation).join(" ");
+  return usage;
 }
 
 function parse(message: Message, param: CommandParameter, args: RestorableArgumentIterator): any {
@@ -71,7 +92,7 @@ function parse(message: Message, param: CommandParameter, args: RestorableArgume
 export async function dispatch(message: Message, args: string[]): Promise<void> {
 
   let commandLabel = args.shift()?.toLowerCase() as string;
-  let command: Command | undefined = registry.get(commandLabel) || aliasesRegistry.get(commandLabel);
+  let command: Command | undefined = findCommand(commandLabel);
   let guild = message.guild;
   let member = message.member;
 

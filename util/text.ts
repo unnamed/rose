@@ -49,6 +49,11 @@ export function validateSchema(schema: any, target: any): boolean {
   return props.size == 0;
 }
 
+export function capitalizeFirst(text: string): string {
+  let first = text.charAt(0);
+  return first.toUpperCase() + text.substring(1);
+}
+
 export function wrapCode(type: string, text: string): string {
   return "```" + type + "\n" + text + "```"; 
 }
