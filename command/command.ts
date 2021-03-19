@@ -1,4 +1,4 @@
-import { Message, Permission } from "https://deno.land/x/discordeno/mod.ts";
+import { Message, Permission } from "../deps.ts";
 
 export type ArgumentParser<T> = (message: Message, spec: CommandParameter, args: RestorableArgumentIterator) => T;
 

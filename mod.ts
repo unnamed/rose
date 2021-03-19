@@ -1,4 +1,4 @@
-import { startBot, logger, editBotsStatus, ActivityType, SlashCommandOptionType } from "./deps.ts";
+import { startBot, logger, editBotsStatus, ActivityType } from "./deps.ts";
 
 import loadListeners from "./loader/listener.loader.ts";
 import loadCommands from "./loader/command.loader.ts";

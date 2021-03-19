@@ -1,4 +1,5 @@
 import { Command, CommandParameter } from "./command.ts";
+import { argumentParsers } from "./command.manager.ts";
 import { Message, botHasPermission, memberIDHasPermission } from "../deps.ts";
 
 export async function hasPermission(message: Message, command: Command): Promise<boolean> {
@@ -15,21 +16,26 @@ export async function hasPermission(message: Message, command: Command): Promise
   }
   return true;
 }
-export function getLineRepresentation(parameter: CommandParameter): string {
-  let suffix = parameter.infinite ? "..." : "";
-  if (parameter.optional) {
-    return `[${parameter.name}${suffix}]`;
-  } else {
-    return `<${parameter.name}${suffix}>`;
+export function getLineRepresentation(param: CommandParameter): string | undefined{
+  for (let type of param.type.split("|")) {
+    type = type.trim();
+    let parser = argumentParsers.get(type);
+    if (parser) {
+      let repr = parser.getRepresentation(param);
+      if (repr) {
+        return repr;
+      }
+    }
   }
+  return undefined;
 }
 
 export function getUsage(command: Command): string {
   let usage = "-";
   usage += command.name + " ";
   usage += command.arguments
-      ?.filter(arg => arg.type !== 'message')
-      .map(getLineRepresentation)
+      ?.map(getLineRepresentation)
+      .filter(repr => repr !== undefined)
       .join(" ");
   return usage;
 }

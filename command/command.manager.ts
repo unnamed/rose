@@ -2,33 +2,18 @@ import {
   Command, 
   CommandParameter, 
   RestorableArgumentIterator, 
-  ParseError, 
-  ArgumentParser
+  ParseError
 } from "./command.ts";
 import { hasPermission } from "./command.util.ts";
 import { answersCache } from "../storage/mod.ts";
-import { Message, Embed } from "../deps.ts";
+import { Message } from "../deps.ts";
+import { ArgumentParser } from "./argument/argument.parser.ts";
 import config from "../config.ts";
 
 export const registry = new Map<string, Command>();
 
 const aliasesRegistry = new Map<string, Command>();
-const argumentProviders = new Map<string, ArgumentParser<any>>();
-
-argumentProviders.set(
-  "str",
-  (_, spec, args) => {
-    if (spec.infinite) {
-      let result: string[] = [];
-      for (let arg of args) {
-        result.push(arg);
-      }
-      return result.join(" ");
-    } else {
-      return args.next().value;
-    }
-  }
-);
+export const argumentParsers = new Map<string, ArgumentParser>();
 
 export function register(command: Command): void {
   registry.set(command.name, command);
@@ -52,13 +37,13 @@ function parse(message: Message, param: CommandParameter, args: RestorableArgume
     if (type === 'message') {
       return message;
     } else {
-      let provide = argumentProviders.get(type);
-      if (!provide) {
+      let parser = argumentParsers.get(type);
+      if (!parser) {
         errorHeading = "Unknown type";
         errorMessage = "No argument parser was registered for the type '" + type + "'";
       } else {
         try {
-          return provide(message, param, args);
+          return parser.parse(message, param, args);
         } catch (err) {
           if (err instanceof ParseError) {
             errorHeading = err.heading;
@@ -109,6 +94,7 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
   }
 
   let commandArguments = command.arguments || [];
+  // TODO: This must be made while parsing the arguments
   let requiredArgumentCount = commandArguments
     .filter(param => param.type !== 'message' && !param.optional)
     .length;
