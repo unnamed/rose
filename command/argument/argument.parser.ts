@@ -1,5 +1,5 @@
 import { Message } from "../../deps.ts";
-import { CommandParameter, RestorableArgumentIterator } from "../command.ts";
+import { CommandParameter, ArgumentIterator } from "../command.ts";
 
 /**
  * Represents an argument parser,
@@ -12,7 +12,7 @@ export abstract class ArgumentParser {
    * Parses the given args to the
    * necessary type
    */
-  abstract parse(message: Message, spec: CommandParameter, args: RestorableArgumentIterator): any;
+  abstract parse(message: Message, spec: CommandParameter, args: ArgumentIterator): any;
 
   /**
    * Gets the argument representation

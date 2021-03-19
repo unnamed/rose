@@ -1,7 +1,7 @@
 import { 
   Command, 
   CommandParameter, 
-  RestorableArgumentIterator, 
+  ArgumentIterator, 
   ParseError
 } from "./command.ts";
 import { hasPermission } from "./command.util.ts";
@@ -27,7 +27,7 @@ export function findCommand(commandLabel: string): Command | undefined {
   return registry.get(commandLabel) || aliasesRegistry.get(commandLabel);
 }
 
-function parse(message: Message, param: CommandParameter, args: RestorableArgumentIterator): any {
+function parse(message: Message, param: CommandParameter, args: ArgumentIterator): any {
 
   let errorHeading = "";
   let errorMessage = "No types were specified for the parameter '" + param.name + "'";
@@ -94,28 +94,8 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
   }
 
   let commandArguments = command.arguments || [];
-  // TODO: This must be made while parsing the arguments
-  let requiredArgumentCount = commandArguments
-    .filter(param => param.type !== 'message' && !param.optional)
-    .length;
-
-  if (args.length < requiredArgumentCount) {
-    message.channel?.send({
-      embed: {
-        title: "Invalid Syntax Error",
-        description: `You must provide at least **${requiredArgumentCount}** arguments`,
-        color: config.color,
-        footer: {
-          text: `Executed by ${message.author.username}`,
-          icon_url: message.guild?.iconURL(64, 'png')
-        }
-      }
-    });
-    return;
-  }
-
   let parseResult = [];
-  let argIterator = new RestorableArgumentIterator(args);
+  let argIterator = new ArgumentIterator(args);
 
   for (let i = 0; i < commandArguments.length; i++) {
     let param = commandArguments[i];

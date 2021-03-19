@@ -1,6 +1,4 @@
-import { Message, Permission } from "../deps.ts";
-
-export type ArgumentParser<T> = (message: Message, spec: CommandParameter, args: RestorableArgumentIterator) => T;
+import { Permission } from "../deps.ts";
 
 export class ParseError extends Error {
 
@@ -13,7 +11,7 @@ export class ParseError extends Error {
 
 }
 
-export class RestorableArgumentIterator {
+export class ArgumentIterator {
   
   constructor(
     private args: string[],
@@ -21,24 +19,20 @@ export class RestorableArgumentIterator {
   ) {
   }
 
-  [Symbol.iterator]() {
-    return this;
+  hasNext(): boolean {
+    return this.cursor < this.args.length;
   }
 
-  next(): { value: string, done: boolean } {
-    return {
-      value: this.args[this.cursor++],
-      done: this.cursor > this.args.length
-    };
-  }
-
-  clone(): RestorableArgumentIterator {
-    return new RestorableArgumentIterator(
-      // copies are unnecessary here, argument
-      // array is supposed to be immutable
-      this.args, 
-      this.cursor
-    );
+  next(): string {
+    let cursor = this.cursor++;
+    if (cursor >= this.args.length) {
+      throw new ParseError(
+        "More arguments are required",
+        "You must provide more arguments to this command, see help using `-help`"
+      );
+    } else {
+      return this.args[cursor];
+    }
   }
 
 }
