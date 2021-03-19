@@ -1,6 +1,6 @@
 import { Command } from "../command.ts";
 import { Message } from "../../deps.ts";
-import config from "../../config.ts";
+import config from "../../config.js";
 import { wrapCode } from "../../util/mod.ts";
 
 const command: Command = {

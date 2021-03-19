@@ -2,7 +2,7 @@ import { Command } from "../command.ts";
 import { Message, EmbedField } from "../../deps.ts";
 import { registry, findCommand } from "../command.manager.ts";
 import { hasPermission, getUsage } from "../command.util.ts";
-import config from "../../config.ts";
+import config from "../../config.js";
 import { capitalizeFirst } from "../../util/mod.ts";
 
 const command: Command = {

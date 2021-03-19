@@ -8,7 +8,7 @@ import { hasPermission } from "./command.util.ts";
 import { answersCache } from "../storage/mod.ts";
 import { Message } from "../deps.ts";
 import { ArgumentParser } from "./argument/argument.parser.ts";
-import config from "../config.ts";
+import config from "../config.js";
 
 export const registry = new Map<string, Command>();
 

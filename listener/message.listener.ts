@@ -1,5 +1,5 @@
 import { Guild, Message, Member, logger } from "../deps.ts";
-import config from "../config.ts";
+import config from "../config.js";
 import { mute } from "../moderation/mute.handler.ts";
 import { formatUser, wrapCode } from "../util/mod.ts";
 import { dispatch } from "../command/command.manager.ts";

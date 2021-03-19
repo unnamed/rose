@@ -2,7 +2,7 @@ import { Command } from "../command.ts";
 import { saveAnswer } from "../../storage/mod.ts";
 import { Message, Guild, Embed } from "../../deps.ts";
 import { validateSchema } from "../../util/mod.ts";
-import config from "../../config.ts";
+import config from "../../config.js";
 
 /**
   provider?: EmbedProvider;
