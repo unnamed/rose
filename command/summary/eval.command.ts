@@ -27,7 +27,8 @@ const command: Command = {
 
     let result; 
     try {
-      result = eval(code);
+      let localResult = eval(code);
+      result = (localResult instanceof Promise) ? (await localResult) : result;
     } catch (err) {
       result = err.message;
     }
