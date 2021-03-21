@@ -118,6 +118,7 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
           return;
         } else {
           argIterator.cursor = cursorSnapshot;
+          parseResult.push(param.defaultValue);
           continue;
         }
       } else {
