@@ -27,8 +27,8 @@ argumentParsers.set(
         }
       }
       // check if it's a mention
-      if (!found && member.length == 21 && member.startsWith("<@") && member.endsWith(">")) {
-        let id = parseInt(member.substring(2, member.length - 1));
+      if (!found && member.length == 22 && member.startsWith("<@!") && member.endsWith(">")) {
+        let id = parseInt(member.substring(3, member.length - 1));
         if (!isNaN(id)) {
           found = guild.members.get(member);
         }

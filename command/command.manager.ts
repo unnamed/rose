@@ -105,7 +105,7 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
       parseResult.push(parse(message, param, argIterator));
     } catch (err) {
       if (err instanceof ParseError) {
-        if (!param.optional) {
+        if (!param.optional || i + 1 == commandArguments.length) {
           message.channel?.send({
             embed: {
               title: `Parsing Error: ${err.heading}`,

@@ -1,5 +1,6 @@
 import { Command } from "../command.ts";
 import { Message, Member } from "../../deps.ts";
+import config from "../../config.js";
 
 const command: Command = {
   name: "avatar",
@@ -18,7 +19,23 @@ const command: Command = {
     if (!member) {
       member = message.member;
     }
-    message.channel?.send({ embed: { title: "poto", image: { url: member?.avatarURL } }})
+    message.channel?.send({ 
+      embed: {
+        title: `Here's is the ${member?.username}'s avatar`,
+        description: "Please don't weird things with this!",
+        color: config.color,
+        image: {
+          url: member?.makeAvatarURL({
+            size: 512,
+            format: 'png'
+          })
+        },
+        footer: {
+          text: `Requested by ${message.author.username}`,
+          icon_url: message.member?.avatarURL
+        }
+      }
+    });
   }
 };
 
