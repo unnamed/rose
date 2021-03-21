@@ -80,6 +80,28 @@ argumentParsers.set(
   }
 );
 
+///
+/// Integer argument parser, converts
+/// strings to ints using the parseInt
+/// function and throws an error when
+/// it's NaN
+///
+argumentParsers.set(
+  "int",
+  new class extends ArgumentParser {
+    async parse(message: Message, spec: CommandParameter, args: ArgumentIterator) {
+      let arg = args.next();
+      let value = parseInt(arg);
+      if (isNaN(value)) {
+        throw new ParseError(
+          "You must provide a number",
+          `The argument \`${arg}\` cannot be parsed as an integer!`
+        );
+      }
+      return value;
+    }
+  }
+);
 
 ///
 /// String argument "parser", the arguments
