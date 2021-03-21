@@ -31,6 +31,7 @@ function parse(message: Message, param: CommandParameter, args: ArgumentIterator
 
   let errorHeading = "";
   let errorMessage = "No types were specified for the parameter '" + param.name + "'";
+  let throwOnLastArg = false;
 
   for (let type of param.type.split("|")) {
     type = type.trim();
@@ -48,6 +49,7 @@ function parse(message: Message, param: CommandParameter, args: ArgumentIterator
           if (err instanceof ParseError) {
             errorHeading = err.heading;
             errorMessage = err.message;
+            throwOnLastArg = err.throwOnLastArg;
           } else {
             throw err;
           }
@@ -56,7 +58,7 @@ function parse(message: Message, param: CommandParameter, args: ArgumentIterator
     }
   }
 
-  throw new ParseError(errorHeading, errorMessage);
+  throw new ParseError(errorHeading, errorMessage, throwOnLastArg);
 }
 
 export async function dispatch(message: Message, args: string[]): Promise<void> {
@@ -105,7 +107,7 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
       parseResult.push(parse(message, param, argIterator));
     } catch (err) {
       if (err instanceof ParseError) {
-        if (!param.optional || i + 1 == commandArguments.length) {
+        if (!param.optional || ((i + 1 == commandArguments.length) && err.throwOnLastArg)) {
           message.channel?.send({
             embed: {
               title: `Parsing Error: ${err.heading}`,

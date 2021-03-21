@@ -4,7 +4,8 @@ export class ParseError extends Error {
 
   constructor(
     public heading: string,
-    message: string
+    message: string,
+    public throwOnLastArg: boolean = true
   ) {
     super(message);
   }
@@ -28,7 +29,8 @@ export class ArgumentIterator {
     if (cursor >= this.args.length) {
       throw new ParseError(
         "More arguments are required",
-        "You must provide more arguments to this command, see help using `-help`"
+        "You must provide more arguments to this command, see help using `-help`",
+        false
       );
     } else {
       return this.args[cursor];
