@@ -2,8 +2,11 @@ import { argumentParsers } from "../command.manager.ts";
 import { CommandParameter, ArgumentIterator, ParseError } from "../command.ts";
 import { ArgumentParser } from "./argument.parser.ts";
 import { Message } from "../../deps.ts";
+import { findMember } from "../../util/mod.ts";
 
-const discriminatorSuffixRegex = new RegExp(/#[0-9]{4}$/g);
+const tagRegex = new RegExp(/.+#[0-9]{4}$/g);
+const snowflakeRegex = new RegExp(/[0-9]{18}$/g);
+const mentionRegex = new RegExp(/<@!([0-9]{18})>$/g);
 
 ///
 /// Member argument parser, resolves
@@ -12,29 +15,32 @@ const discriminatorSuffixRegex = new RegExp(/#[0-9]{4}$/g);
 argumentParsers.set(
   "member",
   new class extends ArgumentParser {
-    parse(message: Message, spec: CommandParameter, args: ArgumentIterator) {
+    async parse(message: Message, spec: CommandParameter, args: ArgumentIterator) {
       let guild = message.guild;
       if (!guild) {
         throw new ParseError("Not in a guild", "This command must be executed in a guild!");
       }
       let member: string = args.next();
+
       let found = undefined;
       // check if it's an ID
-      if (member.length == 18) {
-        let id = parseInt(member);
-        if (!isNaN(id)) {
-          found = guild.members.get(member);
-        }
+      if (member.match(snowflakeRegex)) {
+        found = await findMember(guild, member);
       }
       // check if it's a mention
-      if (!found && member.length == 22 && member.startsWith("<@!") && member.endsWith(">")) {
-        let id = parseInt(member.substring(3, member.length - 1));
-        if (!isNaN(id)) {
-          found = guild.members.get(member);
+      if (!found) {
+        let matches = member.matchAll(mentionRegex);
+        if (matches) {
+          //matches.next();
+          let match = matches.next()?.value;
+          if (match) {
+            let id = match[1];
+            found = await findMember(guild, id);
+          }
         }
-      }
+      } 
       // check if it's a tag
-      if (!found && member.match(discriminatorSuffixRegex)) {
+      if (!found && member.match(tagRegex)) {
         for (let m of guild.members.values()) {
           let tag = m.username + "#" + m.discriminator;
           if (tag === member) {
@@ -49,7 +55,8 @@ argumentParsers.set(
       } else {
         throw new ParseError(
           "Member not found",
-          `A member with ID or tag \`${member}\` cannot be found`
+          `A member with ID or tag \`${member}\` cannot be found.
+          **Note:** Tags only work when the member is cached.`
         );
       }
     }
@@ -64,7 +71,7 @@ argumentParsers.set(
 argumentParsers.set(
   "message",
   new class extends ArgumentParser {
-    parse(message: Message, spec: CommandParameter, args: ArgumentIterator) {
+    async parse(message: Message, spec: CommandParameter, args: ArgumentIterator) {
       return message;
     }
     getRepresentation(spec: CommandParameter) {
@@ -83,7 +90,7 @@ argumentParsers.set(
 argumentParsers.set(
   "str",
   new class extends ArgumentParser {
-    parse(message: Message, spec: CommandParameter, args: ArgumentIterator) {
+    async parse(message: Message, spec: CommandParameter, args: ArgumentIterator) {
       if (spec.infinite) {
         // Initialize with an argument because
         // at least one argument is required

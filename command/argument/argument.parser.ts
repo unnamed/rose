@@ -12,7 +12,7 @@ export abstract class ArgumentParser {
    * Parses the given args to the
    * necessary type
    */
-  abstract parse(message: Message, spec: CommandParameter, args: ArgumentIterator): any;
+  abstract parse(message: Message, spec: CommandParameter, args: ArgumentIterator): Promise<any>;
 
   /**
    * Gets the argument representation

@@ -27,7 +27,7 @@ export function findCommand(commandLabel: string): Command | undefined {
   return registry.get(commandLabel) || aliasesRegistry.get(commandLabel);
 }
 
-function parse(message: Message, param: CommandParameter, args: ArgumentIterator): any {
+async function parse(message: Message, param: CommandParameter, args: ArgumentIterator): Promise<any> {
 
   let errorHeading = "";
   let errorMessage = "No types were specified for the parameter '" + param.name + "'";
@@ -44,7 +44,7 @@ function parse(message: Message, param: CommandParameter, args: ArgumentIterator
         errorMessage = "No argument parser was registered for the type '" + type + "'";
       } else {
         try {
-          return parser.parse(message, param, args);
+          return await parser.parse(message, param, args);
         } catch (err) {
           if (err instanceof ParseError) {
             errorHeading = err.heading;
@@ -104,7 +104,7 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
     let cursorSnapshot = argIterator.cursor;
 
     try {
-      parseResult.push(parse(message, param, argIterator));
+      parseResult.push(await parse(message, param, argIterator));
     } catch (err) {
       if (err instanceof ParseError) {
         if (!param.optional || ((i + 1 == commandArguments.length) && err.throwOnLastArg)) {
