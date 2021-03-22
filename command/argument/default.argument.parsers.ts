@@ -104,26 +104,39 @@ argumentParsers.set(
 );
 
 ///
-/// String argument "parser", the arguments
-/// are already strings, so parsing isn't necessary
-/// but this argument "parser" checks for infinite
-/// text arguments
+/// Dummy argument "parser", it
+/// returns a single string
 ///
 argumentParsers.set(
   "str",
   new class extends ArgumentParser {
     async parse(message: Message, spec: CommandParameter, args: ArgumentIterator) {
-      if (spec.infinite) {
-        // Initialize with an argument because
-        // at least one argument is required
-        let result: string[] = [args.next()];
-        while (args.hasNext()) {
-          result.push(args.next());
-        }
-        return result.join(" ");
-      } else {
-        return args.next();
-      }
+      return args.next();
+    }
+  }
+)
+
+///
+/// String argument "parser", the arguments
+/// are already strings, so parsing isn't necessary
+/// but this argument "parser" joins all the
+/// args into a single string
+///
+argumentParsers.set(
+  "...str",
+  new class extends ArgumentParser {
+    async parse(message: Message, spec: CommandParameter, args: ArgumentIterator) {
+      // Initialize with an argument because
+      // at least one argument is required
+      let result: string[] = [];
+      do {
+        result.push(args.next());
+      } while (args.hasNext());
+      return result.join(" ");
+    }
+
+    getRepresentation(spec: CommandParameter): string {
+      return spec.defaultValue ? `[${spec.name}...]` : `<${spec.name}...>`;
     }
   }
 );

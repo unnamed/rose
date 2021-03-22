@@ -35,24 +35,20 @@ async function parse(message: Message, param: CommandParameter, args: ArgumentIt
 
   for (let type of param.type.split("|")) {
     type = type.trim();
-    if (type === 'message') {
-      return message;
+    let parser = argumentParsers.get(type);
+    if (!parser) {
+      errorHeading = "Unknown type";
+      errorMessage = "No argument parser was registered for the type '" + type + "'";
     } else {
-      let parser = argumentParsers.get(type);
-      if (!parser) {
-        errorHeading = "Unknown type";
-        errorMessage = "No argument parser was registered for the type '" + type + "'";
-      } else {
-        try {
-          return await parser.parse(message, param, args);
-        } catch (err) {
-          if (err instanceof ParseError) {
-            errorHeading = err.heading;
-            errorMessage = err.message;
-            throwOnLastArg = err.throwOnLastArg;
-          } else {
-            throw err;
-          }
+      try {
+        return await parser.parse(message, param, args);
+      } catch (err) {
+        if (err instanceof ParseError) {
+          errorHeading = err.heading;
+          errorMessage = err.message;
+          throwOnLastArg = err.throwOnLastArg;
+        } else {
+          throw err;
         }
       }
     }
@@ -107,7 +103,7 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
       parseResult.push(await parse(message, param, argIterator));
     } catch (err) {
       if (err instanceof ParseError) {
-        if (!param.optional || ((i + 1 == commandArguments.length) && err.throwOnLastArg)) {
+        if ((param.defaultValue !== undefined) || ((i + 1 == commandArguments.length) && err.throwOnLastArg)) {
           message.channel?.send({
             embed: {
               title: `Parsing Error: ${err.heading}`,

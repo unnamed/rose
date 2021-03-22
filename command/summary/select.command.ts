@@ -6,9 +6,8 @@ const command: Command = {
   category: "fun",
   arguments: [
     {
-      type: "str",
-      name: "decisions (separated by '|')",
-      infinite: true
+      type: "...str",
+      name: "decisions (separated by '|')"
     }
   ],
   execute: async (decisions: string) => {

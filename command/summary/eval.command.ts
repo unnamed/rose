@@ -15,8 +15,7 @@ const command: Command = {
     { type: 'message' },
     {
       name: 'code',
-      type: 'str',
-      infinite: true
+      type: '...str'
     }
   ],
   execute: async (message: Message, code: string) => {

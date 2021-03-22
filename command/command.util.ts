@@ -16,7 +16,7 @@ export async function hasPermission(message: Message, command: Command): Promise
   }
   return true;
 }
-export function getLineRepresentation(param: CommandParameter): string | undefined{
+export function getLineRepresentation(param: CommandParameter): string | undefined {
   for (let type of param.type.split("|")) {
     type = type.trim();
     let parser = argumentParsers.get(type);
@@ -37,5 +37,5 @@ export function getUsage(command: Command): string {
       ?.map(getLineRepresentation)
       .filter(repr => repr !== undefined)
       .join(" ");
-  return usage;
+  return usage.trim();
 }

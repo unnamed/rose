@@ -19,15 +19,12 @@ const command: Command = {
     {
       type: "int",
       name: "amount",
-      defaultValue: 1,
-      optional: true
+      defaultValue: 1
     },
     {
-      type: "str",
+      type: "...str",
       name: "reason",
       defaultValue: "No reason provided",
-      optional: true,
-      infinite: true
     }
   ],
   execute: async (message: Message, amount: number, reason: string) => {

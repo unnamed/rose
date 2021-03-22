@@ -20,9 +20,7 @@ export abstract class ArgumentParser {
    * specification
    */
   getRepresentation(spec: CommandParameter): string | undefined {
-    let suffix = spec.infinite ? "..." : "";
-    let representation = spec.optional ? `[${spec.name}${suffix}]` : `<${spec.name}${suffix}>`;
-    return representation;
+    return spec.defaultValue ? `[${spec.name}]` : `<${spec.name}>`;
   }
 
 }

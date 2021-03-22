@@ -41,8 +41,6 @@ export class ArgumentIterator {
 
 export interface CommandParameter {
   name?: string;
-  optional?: boolean;
-  infinite?: boolean;
   defaultValue?: any,
   type: string;
 }

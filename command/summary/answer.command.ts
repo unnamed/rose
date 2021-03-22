@@ -48,8 +48,7 @@ const command: Command = {
     },
     {
       name: "response",
-      type: "str",
-      infinite: true
+      type: "...str"
     }
   ],
   execute: async (message: Message, name: string, response: string) => {

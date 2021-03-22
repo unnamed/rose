@@ -14,7 +14,7 @@ const command: Command = {
     {
       type: 'str',
       name: 'command',
-      optional: true
+      defaultValue: null
     }
   ],
   execute: async (message: Message, commandName?: string) => {

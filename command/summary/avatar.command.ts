@@ -12,7 +12,7 @@ const command: Command = {
     { 
       type: "member",
       name: "member",
-      optional: true
+      defaultValue: null
     }
   ],
   execute: async (message: Message, member?: Member) => {
