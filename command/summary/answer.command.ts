@@ -16,6 +16,12 @@ const embedSchema = {
   color: { $optional: true, $type: "number" },
   url: { $optional: true, $type: "string" },
   timestamp: { $optional: true, $type: "string" },
+  image: {
+    $optional: true,
+    $type: {
+      url: "string"
+    }
+  },
   footer: {
     $optional: true,
     $type: {
