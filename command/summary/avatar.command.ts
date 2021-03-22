@@ -5,7 +5,7 @@ import config from "../../config.js";
 const command: Command = {
   name: "avatar",
   category: "utility",
-  aliases: ["profilepic"],
+  aliases: ["profilepic", "av"],
   description: "Look for someone's avatar",
   arguments: [
     { type: "message" },
