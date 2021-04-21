@@ -4,8 +4,6 @@ import { mute } from "../moderation/mute.handler.ts";
 import { formatUser, wrapCode } from "../util/mod.ts";
 import { dispatch } from "../command/command.manager.ts";
 
-
-
 /**
  * Map containing all the user
  * identifiers that are in cooldown.
@@ -74,7 +72,6 @@ export default {
           }
         }
       }, subtractDelay);
-      return;
     }
   }
 };
