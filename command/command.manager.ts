@@ -124,17 +124,15 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
   }
 
   command.execute.apply(undefined, parseResult).catch(err => {
-    let { heading, description } = err;
-    if (heading || description) {
+    if (err.title) {
       message.channel?.send({
         embed: {
-          title: heading,
-          description: description,
           color: config.color,
           footer: {
             text: `Requested by ${message.author.username}`,
             icon_url: message.member?.avatarURL
-          }
+          },
+          ...err
         }
       });
     } 

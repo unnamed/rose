@@ -19,9 +19,8 @@ const command: Command = {
     if (!member) {
       member = message.member;
     }
-    message.channel?.send({ 
-      embed: {
-        title: `Here's is the ${member?.username}'s avatar`,
+    throw {
+      title: `Here's is the ${member?.username}'s avatar`,
         description: "Please don't weird things with this!",
         color: config.color,
         image: {
@@ -34,8 +33,7 @@ const command: Command = {
           text: `Requested by ${message.author.username}`,
           icon_url: message.member?.avatarURL
         }
-      }
-    });
+    };
   }
 };
 

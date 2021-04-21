@@ -59,7 +59,7 @@ const command: Command = {
   ],
   execute: async (message: Message, name: string, response: string) => {
     if (!config.developers.includes(message.author.id)) {
-      throw { heading: "No permission!", description: "Only bot developers can use this command" };
+      throw { title: "No permission!", description: "Only bot developers can use this command" };
     }
     try {
       let responseJson = JSON.parse(
@@ -69,23 +69,23 @@ const command: Command = {
       );
       if (!validateSchema(embedSchema, responseJson)) {
         throw {
-          heading: "Invalid JSON!",
+          title: "Invalid JSON!",
           description: "The given response doesn't match with the embed schema"
         };
       } else if (!(await saveAnswer(message.guild as Guild, name, responseJson as Embed, true, true))) {
         throw {
-          heading: "Cannot register custom answer",
+          title: "Cannot register custom answer",
           description: "A command or embed answer is already registered with the name " + name
         };
       }
       message.channel?.send({ content: `:white_check_mark: Registered \`${name}\`...`, embed: responseJson });
     } catch (err) {
       // already custom error
-      if (err.heading) {
+      if (err.title) {
         throw err;
       } else {
         throw { 
-          heading: "Invalid JSON!",
+          title: "Invalid JSON!",
           description: "The embed must be represented using JSON, error: " + err.message
         };
       }

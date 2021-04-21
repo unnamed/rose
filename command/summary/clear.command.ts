@@ -31,7 +31,7 @@ const command: Command = {
 
     if (amount >= 100 || amount < 0) {
       throw {
-        heading: "Invalid amount!",
+        title: "Invalid amount!",
         description: `Cannot delete \`${amount}\` message(s), the amount`
           + ` must be minor than 100 and major than zero!`
       };
@@ -51,7 +51,7 @@ const command: Command = {
     }
 
     throw {
-      heading: `Purged \`${amount}\` message(s)`,
+      title: `Purged \`${amount}\` message(s)`,
       description: `\`${amount}\` message(s) have been deleted from the channel \`${message.channel?.name}\`
           **Reason:** \`${reason}\``
     };

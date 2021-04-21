@@ -14,7 +14,7 @@ const command: Command = {
     let decisionsArray = decisions.split("|");
     let selection = decisionsArray[Math.floor(Math.random() * decisionsArray.length)].trim();
     throw {
-      heading: "Hmmm...",
+      title: "Hmmm...",
       description: selection
     };
   }

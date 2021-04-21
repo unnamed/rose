@@ -21,7 +21,7 @@ const command: Command = {
   execute: async (message: Message, code: string) => {
 
     if (!config.developers.includes(message.author.id)) {
-      throw { heading: "No permission!", description: "Only bot developers can use this command" };
+      throw { title: "No permission!", description: "Only bot developers can use this command" };
     }
 
     let result; 
@@ -31,22 +31,20 @@ const command: Command = {
     } catch (err) {
       result = err.message;
     }
-    message.channel?.send({
-      embed: {
-        title: "Evaluation Result",
-        fields: [
-          {
-            name: "Input",
-            value: wrapCode("javascript", code)
-          },
-          {
-            name: "Output",
-            value: wrapCode("none", result)
-          }
-        ],
-        color: config.color
-      }
-    });
+
+    throw {
+      title: "Evaluation Result",
+      fields: [
+        {
+          name: "Input",
+          value: wrapCode("javascript", code)
+        },
+        {
+          name: "Output",
+          value: wrapCode("none", result)
+        }
+      ]
+    };
   }
 };
 

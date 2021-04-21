@@ -9,7 +9,7 @@ const command: Command = {
   execute: async (message: Message) => {
     let ping = (Date.now() - message.timestamp) / 1000;
     throw {
-      heading: "Pong!",
+      title: "Pong!",
       description: `The bot ping is \`${ping}\` seconds`
     };
   }
