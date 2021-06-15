@@ -1,12 +1,12 @@
 import { Command } from "../command.ts";
-import { Message } from "../../deps.ts";
+import { DiscordenoMessage } from "../../deps.ts";
 
 const command: Command = {
   name: "ping",
   description: "Check the bot connection",
   category: "misc",
   arguments: [{ type: "message" }],
-  execute: async (message: Message) => {
+  execute: async (message: DiscordenoMessage) => {
     let ping = (Date.now() - message.timestamp) / 1000;
     throw {
       title: "Pong!",

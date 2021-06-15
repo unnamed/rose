@@ -1,4 +1,4 @@
-import { Guild } from "../../deps.ts";
+import { DiscordenoGuild } from "../../deps.ts";
 
 /**
  * Main directory for json
@@ -24,7 +24,7 @@ export const answersDir = `${dir}/answers`;
  * Gets the moderations json file for
  * the specified guild 
  */
-export function getModerationsPath(guild: Guild): string {
+export function getModerationsPath(guild: DiscordenoGuild): string {
   return `${moderationsDir}/${guild.id}.json`;
 }
 
@@ -32,6 +32,6 @@ export function getModerationsPath(guild: Guild): string {
  * Gets the answers json file for
  * the specified guild
  */
-export function getAnswersPath(guild: Guild): string {
+export function getAnswersPath(guild: DiscordenoGuild): string {
   return `${answersDir}/${guild.id}.json`;
 }

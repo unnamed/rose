@@ -1,10 +1,10 @@
 import { ModerationData } from "../types.ts";
-import { Guild, readJson, writeJson, existsSync, ensureDir } from "../../deps.ts";
+import { DiscordenoGuild, readJson, writeJson, existsSync, ensureDir } from "../../deps.ts";
 import { moderationsDir, getModerationsPath } from "./json.storage.ts";
 
 type Moderations = { [target: string]: ModerationData }
 
-export async function saveModeration(guild: Guild, moderation: ModerationData) {
+export async function saveModeration(guild: DiscordenoGuild, moderation: ModerationData) {
   await ensureDir(moderationsDir);
   let path = getModerationsPath(guild);
   let moderations: Moderations;

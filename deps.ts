@@ -25,5 +25,9 @@ await log.setup({
 });
 export const logger: log.Logger = log.getLogger();
 
+// standard filesystem library
 export * from "https://deno.land/std@0.67.0/fs/mod.ts";
-export * from "https://deno.land/x/discordeno/mod.ts"
+// discord api wrapper library
+export * from "https://deno.land/x/discordeno@11.2.0/mod.ts";
+// image manipulation library
+export * as ImageScript from 'https://deno.land/x/imagescript@1.2.0/mod.ts';

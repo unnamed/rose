@@ -1,24 +1,45 @@
-import { 
-  Command, 
-  CommandParameter, 
-  ArgumentIterator, 
-  ParseError
-} from "./command.ts";
+import { Command, PartialCommand, CommandParameter } from "./command.ts";
+import { ParseContext, CommandElement, ArgumentIterator, ElementCreator } from './parse.ts';
+import { CommandElementCompound } from './compound.ts';
+import { ParentCommandElement } from './parent.ts';
 import { hasPermission } from "./command.util.ts";
 import { answersCache } from "../storage/mod.ts";
-import { Message } from "../deps.ts";
-import { ArgumentParser } from "./argument/argument.parser.ts";
+import { DiscordenoMessage } from "../deps.ts";
 import config from "../config.js";
 
 export const registry = new Map<string, Command>();
-
+export const elementCreators = new Map<string, ElementCreator>();
 const aliasesRegistry = new Map<string, Command>();
-export const argumentParsers = new Map<string, ArgumentParser>();
+
+function getElements(parameters: CommandParameter[]): CommandElement[] {
+  return parameters.map(param => {
+    let create = elementCreators.get(param.type);
+    if (!create) {
+      throw new Error(`No creator registered for type ${param.type}`);
+    }
+    return create(param);
+  });
+}
 
 export function register(command: Command): void {
   registry.set(command.name, command);
   if (command.aliases) {
     command.aliases.forEach(alias => aliasesRegistry.set(alias, command));
+  }
+
+  let root = new CommandElementCompound(
+    command.name,
+    getElements(command.arguments as CommandParameter[])
+  );
+
+  if (command.children) {
+    let children = new Map<string, PartialCommand>();
+    for (let subName in command.children) {
+      children.set(subName, command.children[subName]);
+    }
+    command.element = new ParentCommandElement(command.name, children, root);
+  } else {
+    command.element = root;
   }
 }
 
@@ -27,37 +48,7 @@ export function findCommand(commandLabel: string): Command | undefined {
   return registry.get(commandLabel) || aliasesRegistry.get(commandLabel);
 }
 
-async function parse(message: Message, param: CommandParameter, args: ArgumentIterator): Promise<any> {
-
-  let errorHeading = "";
-  let errorMessage = "No types were specified for the parameter '" + param.name + "'";
-  let throwOnLastArg = false;
-
-  for (let type of param.type.split("|")) {
-    type = type.trim();
-    let parser = argumentParsers.get(type);
-    if (!parser) {
-      errorHeading = "Unknown type";
-      errorMessage = "No argument parser was registered for the type '" + type + "'";
-    } else {
-      try {
-        return await parser.parse(message, param, args);
-      } catch (err) {
-        if (err instanceof ParseError) {
-          errorHeading = err.heading;
-          errorMessage = err.message;
-          throwOnLastArg = err.throwOnLastArg;
-        } else {
-          throw err;
-        }
-      }
-    }
-  }
-
-  throw new ParseError(errorHeading, errorMessage, throwOnLastArg);
-}
-
-export async function dispatch(message: Message, args: string[]): Promise<void> {
+export async function dispatch(message: DiscordenoMessage, args: string[]): Promise<void> {
 
   let commandLabel = args.shift()?.toLowerCase() as string;
   let command: Command | undefined = findCommand(commandLabel);
@@ -83,54 +74,29 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
         description: "Sorry, the bot or you doesn't have the required permissions to execute/use the command :(",
         color: config.color,
         footer: {
-          text: `Executed by ${message.author.username}`,
-          icon_url: guild.iconURL(64, 'png')
+          text: `Executed by ${message.member?.username}`,
+          iconUrl: guild.iconURL(64, 'png')
         }
       }
     });
     return;
   }
 
-  let commandArguments = command.arguments || [];
-  let parseResult = [];
-  let argIterator = new ArgumentIterator(args);
+  let context = new ParseContext(
+    new ArgumentIterator(args),
+    command
+  );
+  
+  let executed = await context.parse();
 
-  for (let i = 0; i < commandArguments.length; i++) {
-    let param = commandArguments[i];
-    let cursorSnapshot = argIterator.cursor;
-
-    try {
-      parseResult.push(await parse(message, param, argIterator));
-    } catch (err) {
-      if (err instanceof ParseError) {
-        if ((param.defaultValue === undefined) || ((i + 1 == commandArguments.length) && err.throwOnLastArg)) {
-          message.channel?.send({
-            embed: {
-              title: `Parsing Error: ${err.heading}`,
-              description: err.message,
-              color: config.color
-            }
-          });
-          return;
-        } else {
-          argIterator.cursor = cursorSnapshot;
-          parseResult.push(param.defaultValue);
-          continue;
-        }
-      } else {
-        throw err;
-      }
-    }
-  }
-
-  command.execute.apply(undefined, parseResult).catch(err => {
+  executed.execute.apply(undefined, [context]).catch(err => {
     if (err.title) {
       message.channel?.send({
         embed: {
           color: config.color,
           footer: {
-            text: `Requested by ${message.author.username}`,
-            icon_url: message.member?.avatarURL
+            text: `Requested by ${message.member?.username}`,
+            iconUrl: message.member?.avatarURL
           },
           ...err
         }

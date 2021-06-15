@@ -1,4 +1,4 @@
-import { Guild, Message, Member, logger } from "../deps.ts";
+import { DiscordenoGuild, DiscordenoMessage, DiscordenoMember, logger } from "../deps.ts";
 import config from "../config.js";
 import { mute } from "../moderation/mute.handler.ts";
 import { formatUser, wrapCode } from "../util/mod.ts";
@@ -11,23 +11,23 @@ import { dispatch } from "../command/command.manager.ts";
  * When a user sends a message being
  * in this map, the value is incremented.
  */
-const warnings = new Map<string, number>();
+const warnings = new Map<bigint, number>();
 const commandPrefix = "-";
 const subtractDelay = 5_000;
 
 export default {
   event: "messageCreate",
-  execute: (message: Message) => {
-    if (!message.author.bot) {
+  execute: (message: DiscordenoMessage) => {
+    if (!message.member?.bot) {
 
-      let content = message.content;
+      let content = message.content as string;
       if (content.startsWith(commandPrefix)) {
         content = content.slice(commandPrefix.length);
         let args = content.split(" ");
         dispatch(message, args).catch(console.error);
       }
 
-      let id: string = message.author.id;
+      let id: bigint = message.member?.id as bigint;
       let count: number = warnings.get(id) || 0;
       warnings.set(id, ++count);
   
@@ -39,7 +39,7 @@ export default {
             color: config.color,
             author: {
               name: message.guild?.name,
-              icon_url: message.guild?.iconURL(32, 'png')
+              iconUrl: message.guild?.iconURL(32, 'png')
             }
           }
         });
@@ -54,18 +54,18 @@ export default {
             },
             fields: [{
               name: "User",
-              value: wrapCode("brainfuck", formatUser(message.author))
+              value: wrapCode("brainfuck", formatUser(message.member as DiscordenoMember))
             }]
           }
         });
-        mute(message.member as Member, message.guild as Guild);
+        mute(message.member as DiscordenoMember, message.guild as DiscordenoGuild);
       }
   
       setTimeout(() => {
         let currentCount: number | undefined = warnings.get(id);
         if (currentCount !== undefined) {
           if (--currentCount < 1) {
-            logger.debug(`[Slowdown Listener] Cleared data of ${message.author.username}`)
+            logger.debug(`[Slowdown Listener] Cleared data of ${message.member?.username}`)
             warnings.delete(id);
           } else {
             warnings.set(id, currentCount);

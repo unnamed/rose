@@ -1,6 +1,6 @@
 import { Command } from "../command.ts";
 import { saveAnswer } from "../../storage/mod.ts";
-import { Message, Guild, Embed } from "../../deps.ts";
+import { DiscordenoMessage, DiscordenoGuild, Embed } from "../../deps.ts";
 import { validateSchema } from "../../util/mod.ts";
 import config from "../../config.js";
 
@@ -57,8 +57,8 @@ const command: Command = {
       type: "...str"
     }
   ],
-  execute: async (message: Message, name: string, response: string) => {
-    if (!config.developers.includes(message.author.id)) {
+  execute: async (message: DiscordenoMessage, name: string, response: string) => {
+    if (!config.developers.includes(message.authorId.toString())) {
       throw { title: "No permission!", description: "Only bot developers can use this command" };
     }
     try {
@@ -72,7 +72,7 @@ const command: Command = {
           title: "Invalid JSON!",
           description: "The given response doesn't match with the embed schema"
         };
-      } else if (!(await saveAnswer(message.guild as Guild, name, responseJson as Embed, true, true))) {
+      } else if (!(await saveAnswer(message.guild as DiscordenoGuild, name, responseJson as Embed, true, true))) {
         throw {
           title: "Cannot register custom answer",
           description: "A command or embed answer is already registered with the name " + name

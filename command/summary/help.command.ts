@@ -1,5 +1,5 @@
 import { Command } from "../command.ts";
-import { Message, EmbedField } from "../../deps.ts";
+import { DiscordenoMessage, EmbedField } from "../../deps.ts";
 import { registry, findCommand } from "../command.manager.ts";
 import { hasPermission, getUsage } from "../command.util.ts";
 import { capitalizeFirst } from "../../util/mod.ts";
@@ -16,7 +16,7 @@ const command: Command = {
       defaultValue: null
     }
   ],
-  execute: async (message: Message, commandName?: string) => {
+  execute: async (message: DiscordenoMessage, commandName?: string) => {
     
     let channel = message.channel;
     

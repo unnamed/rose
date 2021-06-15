@@ -1,6 +1,6 @@
-import { UserPayload, getMember, Guild, Member } from "../deps.ts";
+import {getMember, DiscordenoGuild, DiscordenoMember } from "../deps.ts";
 
-export async function findMember(guild: Guild, id: string): Promise<Member | undefined> {
+export async function findMember(guild: DiscordenoGuild, id: bigint): Promise<DiscordenoMember | undefined> {
   let member = guild.members.get(id);
   if (member) {
     return member;
@@ -9,6 +9,6 @@ export async function findMember(guild: Guild, id: string): Promise<Member | und
   }
 }
 
-export function formatUser(user: UserPayload): string {
+export function formatUser(user: any): string {
   return `${user.username}#${user.discriminator} (${user.id})`;
 }

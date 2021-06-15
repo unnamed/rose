@@ -1,6 +1,6 @@
 import { Command } from "../command.ts";
 import { 
-  Message,
+  DiscordenoMessage,
   getMessages,
   deleteMessages
 } from "../../deps.ts";
@@ -27,7 +27,7 @@ const command: Command = {
       defaultValue: "No reason provided",
     }
   ],
-  execute: async (message: Message, amount: number, reason: string) => {
+  execute: async (message: DiscordenoMessage, amount: number, reason: string) => {
 
     if (amount >= 100 || amount < 0) {
       throw {
@@ -38,13 +38,13 @@ const command: Command = {
     }
 
     let messages = await getMessages(
-      message.channelID,
+      message.channelId,
       { limit: amount + 1 }
     );
 
     if (messages) {
       await deleteMessages(
-        message.channelID,
+        message.channelId,
         messages.map(m => m.id),
         reason
       );

@@ -1,5 +1,5 @@
 import { Command } from "../command.ts";
-import { Message, Member } from "../../deps.ts";
+import { DiscordenoMessage, DiscordenoMember } from "../../deps.ts";
 import config from "../../config.js";
 
 const command: Command = {
@@ -15,7 +15,7 @@ const command: Command = {
       defaultValue: null
     }
   ],
-  execute: async (message: Message, member?: Member) => {
+  execute: async (message: DiscordenoMessage, member?: DiscordenoMember) => {
     if (!member) {
       member = message.member;
     }
@@ -30,7 +30,7 @@ const command: Command = {
           })
         },
         footer: {
-          text: `Requested by ${message.author.username}`,
+          text: `Requested by ${message.member?.username}`,
           icon_url: message.member?.avatarURL
         }
     };

@@ -1,8 +1,8 @@
 import LoadingCollection from "../../collection/loading.collection.ts";
-import { Embed, Guild, cache, readJson, writeJson, existsSync, ensureDir } from "../../deps.ts";
+import { Embed, DiscordenoGuild, cache, readJson, writeJson, existsSync, ensureDir } from "../../deps.ts";
 import { answersDir, getAnswersPath } from "./json.storage.ts";
 
-export const answersCache = new LoadingCollection<[string, string], Embed>(
+export const answersCache = new LoadingCollection<[bigint, string], Embed>(
   async ([guildId, name]) => {
     let guild = cache.guilds.get(guildId);
     if (!guild) {
@@ -22,7 +22,7 @@ type Answers = { [name: string]: Embed };
  * name
  */
 export async function fetchAnswer(
-  guild: Guild,
+  guild: DiscordenoGuild,
   name: string
 ): Promise<Embed | undefined> {
   let path = getAnswersPath(guild);
@@ -40,7 +40,7 @@ export async function fetchAnswer(
  * @returns True if the answer was saved
  */
 export async function saveAnswer(
-  guild: Guild,
+  guild: DiscordenoGuild,
   name: string,
   answer: Embed,
   override = false,
@@ -67,7 +67,7 @@ export async function saveAnswer(
   }
 
   if (cache) {
-    let key: [string, string] = [guild.id, name];
+    let key: [bigint, string] = [guild.id, name];
     if (!answersCache.get(key) || override) {
       answersCache.set(key, answer);
     }
