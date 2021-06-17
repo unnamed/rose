@@ -29,7 +29,7 @@ handlers.set('push', async (client: Client, event: Push) => {
 			.setAuthor(`${repo} in ${branch}`, channel.guild.iconURL({ size: 64, format: 'png' }))
 			.setDescription(
 				event.commits.map(commit => `**•** ${commit.message}`).join('\n')
-				+ `[\`Compare\`](${event.compare}) push by [${event.sender.login}](${event.sender.html_url})`
+				+ `\n[\`Compare\`](${event.compare}) push by [${event.sender.login}](${event.sender.html_url})`
 			)
 	);
 });
