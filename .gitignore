@@ -1,8 +1,12 @@
 # editor files
-/.vscode/
+.idea
+*.iml
 
 # application secrets
 .env
 
-# application data
-/jsondata/
+# node packages
+/node_modules/
+
+# output files
+/build/
