@@ -1,4 +1,4 @@
-import {Push} from './github.events';
+import {Push, Star} from './github.events';
 import {Client, MessageEmbed, TextChannel} from 'discord.js';
 import config from '../../config';
 
@@ -32,5 +32,19 @@ handlers.set('push', async (client: Client, event: Push) => {
 				event.commits.map(commit => `\`[${commit.id.substring(0, 6)}](${commit.url})\` ${commit.message}`)
 			)
 	);
+});
+
+handlers.set('star', async (client: Client, event: Star) => {
+	const channel = await client.channels.fetch('805139625256419338') as TextChannel;
+	if (event.action === 'create') {
+		await channel.send(
+			new MessageEmbed()
+				.setColor(config.color)
+				.setTitle(`[${event.repository.full_name}] stared!`)
+				.setAuthor(event.sender.login, event.sender.avatar_url, event.sender.html_url)
+				.setURL(event.repository.url)
+				.setDescription(`Thank you ${event.sender.login} for the star!`)
+		);
+	}
 });
 //#endregion
