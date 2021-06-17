@@ -11,9 +11,9 @@ export interface Repository {
 	stargazers: number;
 }
 
-// event name: 'watch'
-export interface Watch {
-	action: string; // 'started' for stars
+// event name: 'star'
+export interface Star {
+	action: string; // 'created', 'deleted'
 	repository: Repository;
 	sender: {
 		login: string;
