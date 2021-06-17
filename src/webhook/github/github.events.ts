@@ -1,4 +1,9 @@
 
+// event name: 'watch'
+export interface Watch {
+	action: string; // 'started' for stars
+}
+
 // event name: 'push'
 export interface Push {
 
