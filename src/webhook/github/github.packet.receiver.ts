@@ -25,11 +25,12 @@ handlers.set('push', async (client: Client, event: Push) => {
 	await channel.send(
 		new MessageEmbed()
 			.setColor(config.color)
-			.setTitle(`[${repo}:${branch}] ${event.commits.length} new commits`)
-			.setURL(event.compare)
+			.setTitle(`${event.commits.length} new commits`)
 			.setAuthor(`${repo} in ${branch}`, channel.guild.iconURL({ size: 64, format: 'png' }))
-			.setFooter(event.sender.login, event.sender.avatar_url)
-			.setDescription(event.commits.map(commit => `**•** ${commit.message}`).join('\n'))
+			.setDescription(
+				event.commits.map(commit => `**•** ${commit.message}`).join('\n')
+				+ `[\`Compare\`](${event.compare}) push by [${event.sender.login}](${event.sender.html_url})`
+			)
 	);
 });
 
