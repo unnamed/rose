@@ -22,7 +22,7 @@ handlers.set('push', async (client: Client, event: Push) => {
 	const channel = await client.channels.fetch('805139625256419338') as TextChannel;
 	const branch = event.ref.split('/').pop();
 	const repo = event.repository.full_name;
-	await channel.send
+	await channel.send(
 		new MessageEmbed()
 			.setColor(config.color)
 			.setTitle(`[${repo}:${branch}] ${event.commits.length} new commits`)
