@@ -12,5 +12,12 @@ export default {
 		'187695491163619328', // Flsex
 		'278642935426449418', // Toamto
 		'159425331143507968', // Neerixx
-	]
+	],
+	webhooks: {
+		github: {
+			enabled: false,
+			path: '/github-webhook',
+			port: 3000
+		}
+	}
 };
