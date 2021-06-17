@@ -1,6 +1,7 @@
-import {Push, Star} from './github.events';
+import {Star} from './github.events';
 import {Client, MessageEmbed, TextChannel} from 'discord.js';
 import config from '../../config';
+import onPush from './push.listener';
 
 const handlers = new Map<string, (client: Client, data: any) => Promise<void>>();
 
@@ -18,22 +19,7 @@ export function handleData(client: Client, event: string, data: unknown): void {
 }
 
 //#region Handlers
-handlers.set('push', async (client: Client, event: Push) => {
-	const channel = await client.channels.fetch('805139625256419338') as TextChannel;
-	const branch = event.ref.split('/').pop();
-	const repo = event.repository.full_name;
-	await channel.send(
-		new MessageEmbed()
-			.setColor(config.color)
-			.setAuthor(
-				`New ${event.commits.length} commit(s) to ${repo}:${branch}`,
-				channel.guild.iconURL({ size: 64, format: 'png' })
-			)
-			.setDescription(event.commits.map(commit => `**•**  ${commit.message}`).join('\n'))
-			.setFooter(`[\`Compare\`](${event.compare}) push by [${event.sender.login}](${event.sender.html_url})`)
-	);
-});
-
+handlers.set('push', onPush);
 handlers.set('star', async (client: Client, event: Star) => {
 	const channel = await client.channels.fetch('805139625256419338') as TextChannel;
 	if (event.action === 'created') {
