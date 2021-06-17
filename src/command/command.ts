@@ -12,6 +12,7 @@ export interface PartialCommand {
 	permissions?: { use?: PermissionString[], execute?: PermissionString[] };
 	aliases?: string[];
 	arguments?: CommandParameter[];
+	children?: { [name: string]: PartialCommand },
 	element?: CommandElement; // internal use
 	executeRaw?: (context: ParseContext) => Promise<void>; // internal use
 	execute: (...args: any[]) => Promise<void>;
@@ -21,5 +22,4 @@ export interface PartialCommand {
 export interface Command extends PartialCommand {
 	name: string;
 	category: string;
-	children?: { [name: string]: PartialCommand };
 }

@@ -1,87 +1,67 @@
-import {Command, CommandParameter, PartialCommand} from './command';
-import {ArgumentIterator, CommandElement, ElementCreator, ParseContext} from './parse';
+import {Command, PartialCommand} from './command';
+import {ArgumentIterator, ElementCreator, ParseContext} from './parse';
 import {CommandElementCompound} from './compound';
 import {ParentCommandElement} from './parent';
 import config from '../config.js';
 import {Message} from 'discord.js';
+import {hasPermissions} from './command.util';
 
 export const registry = new Map<string, Command>();
 export const elementCreators = new Map<string, ElementCreator>();
 const aliasesRegistry = new Map<string, Command>();
 
-function getElements(parameters: CommandParameter[]): CommandElement[] {
-	return parameters.map(param => {
+function processElements(name: string, command: PartialCommand): PartialCommand {
+
+	const elements = command.arguments.map(param => {
 		const create = elementCreators.get(param.type);
 		if (!create) {
 			throw new Error(`No creator registered for type ${param.type}`);
 		}
 		return create(param);
 	});
-}
+	const root = new CommandElementCompound(name, elements);
 
-export function register(command: Command): void {
-	registry.set(command.name, command);
-	if (command.aliases) {
-		command.aliases.forEach(alias => aliasesRegistry.set(alias, command));
-	}
-
-	const root = new CommandElementCompound(
-		command.name,
-		getElements(command.arguments as CommandParameter[])
-	);
-
-	function setRawExecutor(partialCommand: PartialCommand, elements: CommandElement[]) {
-		partialCommand.executeRaw = async (context: ParseContext): Promise<void> => {
-			const args = [];
-			elements.forEach(component => args.push(context.values.get(component)));
-			await partialCommand.execute.apply(undefined, args);
-		};
-	}
-
-	setRawExecutor(command, root.components);
+	command.executeRaw = async (context: ParseContext): Promise<void> => {
+		const args = [];
+		elements.forEach(e => args.push(context.values.get(e)));
+		await command.execute.apply(undefined, args);
+	};
 
 	if (command.children) {
 		const children = new Map<string, PartialCommand>();
 		for (const subName in command.children) {
 			const subCommand: PartialCommand = command.children[subName];
-			subCommand.element = new CommandElementCompound(
-				subName,
-				getElements(subCommand.arguments as CommandParameter[])
-			);
-			setRawExecutor(subCommand, (subCommand.element as CommandElementCompound).components);
-			children.set(subName, subCommand);
+			children.set(subName, processElements(subName, subCommand));
 		}
-		command.element = new ParentCommandElement(command.name, children, root);
+		command.element = new ParentCommandElement(name, children, root);
 	} else {
 		command.element = root;
 	}
+
+	return command;
 }
 
-export function findCommand(commandLabel: string): Command | undefined {
-	commandLabel = commandLabel.toLowerCase();
-	return registry.get(commandLabel) || aliasesRegistry.get(commandLabel);
+export function register(command: Command): void {
+	processElements(command.name, command);
+	// save the commands to the map
+	registry.set(command.name, command);
+	if (command.aliases) {
+		command.aliases.forEach(alias => aliasesRegistry.set(alias, command));
+	}
 }
 
 export async function dispatch(message: Message, args: string[]): Promise<void> {
 
-	const commandLabel = args.shift()?.toLowerCase() as string;
-	const command: Command | undefined = findCommand(commandLabel);
+	const commandLabel = args.shift()?.toLowerCase();
+	const command: Command | undefined = registry.get(commandLabel) ?? aliasesRegistry.get(commandLabel);
 	const guild = message.guild;
 	const member = message.member;
 
-	if (!guild || !member) {
+	if (!guild || !member || !command) {
 		return;
 	}
 
-	if (!command) {
-		return;
-	}
-
-	if (
-		command.permissions
-		&& command.permissions.execute.every(permission => message.guild.me.hasPermission(permission))
-		&& command.permissions.use.every(permission => member.hasPermission(permission))
-	) {
+	if (hasPermissions(message, command)) {
 		message.channel?.send({
 			embed: {
 				title: 'No Permission!',
@@ -100,12 +80,8 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
 		new ArgumentIterator(args),
 		command
 	);
-
 	context.variables.set('message', message);
-
-	const executed = await context.parse();
-
-	executed.executeRaw(context).catch(err => {
+	(await context.parse()).executeRaw(context).catch(err => {
 		if (err.title) {
 			message.channel.send({
 				embed: {
