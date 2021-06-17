@@ -10,10 +10,9 @@ export default async (client: Client, event: Push) => {
 		new MessageEmbed()
 			.setColor(config.color)
 			.setAuthor(
-				`New ${event.commits.length} commit(s) to ${repo}:${branch}`,
+				`${repo}:${branch}`,
 				channel.guild.iconURL({ size: 64, format: 'png' })
 			)
-			.setDescription(event.commits.map(commit => `**•**  ${commit.message}`).join('\n'))
-			.setFooter(`[\`Compare\`](${event.compare}) push by [${event.sender.login}](${event.sender.html_url})`)
+			.setDescription(event.commits.map(commit => `[\`${commit.id.substring(0, 6)}\`](${commit.url})  ${commit.message}`).join('\n'))
 	);
 }
