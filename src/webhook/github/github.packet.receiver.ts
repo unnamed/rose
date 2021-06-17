@@ -27,10 +27,9 @@ handlers.set('push', async (client: Client, event: Push) => {
 			.setColor(config.color)
 			.setTitle(`[${repo}:${branch}] ${event.commits.length} new commits`)
 			.setURL(event.compare)
-			.setAuthor(event.sender.login, event.sender.avatar_url, event.sender.html_url)
-			.setDescription(
-				event.commits.map(commit => `[\`${commit.id.substring(0, 6)}\`](${commit.url}) ${commit.message}`)
-			)
+			.setAuthor(`${repo} in ${branch}`, channel.guild.iconURL({ size: 64, format: 'png' }))
+			.setFooter(event.sender.login, event.sender.avatar_url)
+			.setDescription(event.commits.map(commit => `**•** ${commit.message}`).join('\n'))
 	);
 });
 
