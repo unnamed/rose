@@ -36,7 +36,7 @@ handlers.set('push', async (client: Client, event: Push) => {
 
 handlers.set('star', async (client: Client, event: Star) => {
 	const channel = await client.channels.fetch('805139625256419338') as TextChannel;
-	if (event.action === 'create') {
+	if (event.action === 'created') {
 		await channel.send(
 			new MessageEmbed()
 				.setColor(config.color)
