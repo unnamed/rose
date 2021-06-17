@@ -23,8 +23,10 @@ export interface Push {
 	compare: string;
 
 	// who pushed
-	pusher: {
-		name: string
+	sender: {
+		login: string;
+		avatar_url: string;
+		html_url: string;
 	};
 
 	// pushed commits
@@ -35,6 +37,7 @@ export interface Push {
 				name: string;
 				username: string;
 			},
+			url: string;
 			message: string;
 		}
 	];
