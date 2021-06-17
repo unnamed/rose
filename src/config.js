@@ -17,7 +17,7 @@ export default {
 		github: {
 			enabled: true,
 			path: '/github-webhook',
-			port: 3000
+			port: 2346
 		}
 	}
 };
