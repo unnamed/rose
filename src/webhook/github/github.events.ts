@@ -1,7 +1,20 @@
+export interface Repository {
+	// single repo name 'bot'
+	name: string;
+	// full repo name 'unnamed/bot'
+	full_name: string;
+	// url to this repository
+	url: string;
+	// number of watchers
+	watchers: number;
+	// number of stargazers
+	stargazers: number;
+}
 
 // event name: 'watch'
 export interface Watch {
 	action: string; // 'started' for stars
+	repository: Repository;
 }
 
 // event name: 'push'
@@ -11,18 +24,7 @@ export interface Push {
 	ref: string;
 
 	// repository info
-	repository: {
-		// single repo name 'bot'
-		name: string;
-		// full repo name 'unnamed/bot'
-		full_name: string;
-		// url to this repository
-		url: string;
-		// number of watchers
-		watchers: number;
-		// number of stargazers
-		stargazers: number;
-	};
+	repository: Repository;
 
 	// compare string url
 	compare: string;
