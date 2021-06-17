@@ -15,6 +15,11 @@ export interface Repository {
 export interface Watch {
 	action: string; // 'started' for stars
 	repository: Repository;
+	sender: {
+		login: string;
+		avatar_url: string;
+		html_url: string;
+	}
 }
 
 // event name: 'push'
