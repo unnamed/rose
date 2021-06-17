@@ -32,7 +32,7 @@ export default async (client: Client, event: Push) => {
 		const lastEmbed = lastEmbedMessage.embeds[0];
 
 		if (lastEmbed.author.name !== title
-			&& (lastEmbed.description.match(/\n/g) ?? []).length <= 8) {
+			|| (lastEmbed.description.match(/\n/g) ?? []).length > 7) {
 			await sendNewEmbed();
 		} else {
 			await lastEmbedMessage.edit(
