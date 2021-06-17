@@ -4,8 +4,8 @@ require('dotenv').config();
 import {Client} from 'discord.js';
 import logger from './log';
 
-import loadListeners from './listener/listener.loader';
-import loadCommands from './command/command.loader';
+import loadListeners from './loader/listener.loader';
+import loadCommands from './loader/command.loader';
 
 const client = new Client();
 

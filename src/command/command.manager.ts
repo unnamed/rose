@@ -78,7 +78,8 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
 	}
 
 	if (
-		command.permissions.execute.every(permission => message.guild.me.hasPermission(permission))
+		command.permissions
+		&& command.permissions.execute.every(permission => message.guild.me.hasPermission(permission))
 		&& command.permissions.use.every(permission => member.hasPermission(permission))
 	) {
 		message.channel?.send({

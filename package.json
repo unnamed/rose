@@ -6,7 +6,7 @@
   "type":  "commonjs",
   "scripts": {
     "prebuild": "bash makeenv",
-    "build": "tsc",
+    "build": "tsc && node build-src/index.js",
     "prestart": "npm run build",
     "start": "node build/index.js",
     "lint": "eslint src/**/* --ext .js,.ts"

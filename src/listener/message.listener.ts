@@ -25,7 +25,7 @@ export default {
 		if (content.startsWith(commandPrefix)) {
 			content = content.slice(commandPrefix.length);
 			dispatch(message, content.split(/ +/g))
-				.catch(logger.error);
+				.catch(console.error);
 		}
 
 		const id: string = message.author.id;
