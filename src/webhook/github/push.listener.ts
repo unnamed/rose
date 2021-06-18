@@ -20,7 +20,7 @@ export default async (client: Client, event: Push) => {
 		lastEmbedMessageId = (await channel.send(
 			new MessageEmbed()
 				.setColor(config.color)
-				.setAuthor(title, iconURL)
+				.setAuthor(title, iconURL, event.repository.url)
 				.setDescription(history)
 		)).id;
 	}
@@ -38,7 +38,7 @@ export default async (client: Client, event: Push) => {
 			await lastEmbedMessage.edit(
 				new MessageEmbed()
 					.setColor(config.color)
-					.setAuthor(title, iconURL)
+					.setAuthor(title, iconURL, event.repository.url)
 					.setDescription(lastEmbed.description + '\n' + history)
 			);
 		}
