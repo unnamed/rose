@@ -20,6 +20,25 @@ export interface Organization {
 	name: string;
 }
 
+export interface PullRequest {
+	id: number;
+	html_url: string;
+	title: string;
+	user: {
+		login: string;
+		html_user: string;
+	};
+	body: string;
+	repo: Repository;
+}
+
+// event name: 'pull_request'
+export interface PullRequestEvent {
+	action: 'opened' | string;
+	number: number;
+	pull_request: PullRequest;
+}
+
 export interface Issue {
 	id: number;
 	title: string;

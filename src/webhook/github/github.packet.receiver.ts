@@ -1,7 +1,9 @@
 import {Star} from './github.events';
 import {Client, MessageEmbed, TextChannel} from 'discord.js';
 import config from '../../config';
+
 import onPush from './push.listener';
+import onPullRequest from './pull.request.listener';
 
 const handlers = new Map<string, (client: Client, data: any) => Promise<void>>();
 
@@ -20,6 +22,7 @@ export function handleData(client: Client, event: string, data: unknown): void {
 
 //#region Handlers
 handlers.set('push', onPush);
+handlers.set('pull_request', onPullRequest);
 handlers.set('star', async (client: Client, event: Star) => {
 	const channel = await client.channels.fetch('805139625256419338') as TextChannel;
 	if (event.action === 'created') {
