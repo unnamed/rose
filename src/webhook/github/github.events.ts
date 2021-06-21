@@ -31,12 +31,25 @@ export interface PullRequest {
 	body: string;
 }
 
+/**
+ * All the possible pull request event actions, see
+ * docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request
+ */
+type PullRequestEventAction = 'opened' | 'closed' | 'reopened'
+	| 'assigned' | 'auto_merge_disabled' | 'auto_merge_enabled'
+	| 'converted_to_draft' | 'edited' | 'labeled' | 'locked'
+	| 'ready_for_review' | 'review_request_removed' | 'review_request'
+	| 'synchronize' | 'unassigned' | 'unlabeled' | 'unlocked';
+
 // event name: 'pull_request'
 export interface PullRequestEvent {
-	action: 'opened' | string;
+	action: PullRequestEventAction;
 	number: number;
 	pull_request: PullRequest;
 	repository: Repository;
+	sender: {
+		login: string;
+	};
 }
 
 export interface Issue {
