@@ -10,9 +10,9 @@ export default async (client: Client, event: PullRequestEvent) => {
 			new MessageEmbed()
 				.setColor(config.color)
 				.setAuthor(
-					event.pull_request.repo.full_name,
+					event.repository.full_name,
 					channel.guild.iconURL({ size: 64, format: 'png' }),
-					event.pull_request.repo.url
+					event.repository.url
 				)
 				.setDescription(
 					`**Pull Request Opened** by ${event.pull_request.user.login}

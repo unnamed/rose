@@ -29,7 +29,6 @@ export interface PullRequest {
 		html_user: string;
 	};
 	body: string;
-	repo: Repository;
 }
 
 // event name: 'pull_request'
@@ -37,6 +36,7 @@ export interface PullRequestEvent {
 	action: 'opened' | string;
 	number: number;
 	pull_request: PullRequest;
+	repository: Repository;
 }
 
 export interface Issue {
