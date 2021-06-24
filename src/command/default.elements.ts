@@ -81,6 +81,29 @@ elementCreators.set(
 	}
 );
 
+elementCreators.set(
+	'voice-channel',
+	(spec: CommandParameter) => new class extends CommandElement {
+		constructor() {
+			super(spec.name);
+		}
+
+		async parse(context: ParseContext) {
+			const arg = context.args.next();
+			// TODO: Enhance this
+			const message: Message = context.variables.get('message');
+			const channel = await message.guild.channels.resolve(arg);
+			if (!channel || channel.type !== 'voice') {
+				throw new ParseError(
+					'invalid-channel',
+					'Invalid channel, unknown channel or not a voice channel'
+				);
+			}
+			context.values.set(this, channel);
+		}
+	}
+);
+
 ///
 /// Integer argument parser, converts
 /// strings to ints using the parseInt
