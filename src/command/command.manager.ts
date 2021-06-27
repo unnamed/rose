@@ -1,10 +1,11 @@
 import {Command, PartialCommand} from './command';
-import {ArgumentIterator, ElementCreator, ParseContext} from './parse';
+import {ArgumentIterator, ElementCreator, ParseContext, ParseError} from './parse';
 import {CommandElementCompound} from './compound';
 import {ParentCommandElement} from './parent';
 import config from '../config.js';
 import {Message} from 'discord.js';
 import {hasPermissions} from './command.util';
+import logger from '../log';
 
 export const registry = new Map<string, Command>();
 export const elementCreators = new Map<string, ElementCreator>();
@@ -81,8 +82,36 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
 		command
 	);
 	context.variables.set('message', message);
-	(await context.parse()).executeRaw(context).catch(err => {
-		if (err.title) {
+	context.parse()
+		.then(result => result.executeRaw(context))
+		.catch(result => {
+			if (result instanceof ParseError) {
+				// TODO: Make it translatable
+				message.channel.send({
+					embed: {
+						color: config.color,
+						footer: {
+							text: `Requested by ${message.author.username}`,
+							iconURL: message.author.avatarURL()
+						},
+						title: result.title,
+						description: result.message
+					}
+				});
+				return;
+			}
+
+			if (!result.title) {
+				logger.error(
+					`Error occurred while executing ${command.name}.
+						\tArguments: ${args}`
+				);
+				console.error(result);
+				result = {
+					title: 'Internal Error',
+					description: 'An unexpected error has occurred, please inform an administrator.'
+				};
+			}
 			message.channel.send({
 				embed: {
 					color: config.color,
@@ -90,9 +119,8 @@ export async function dispatch(message: Message, args: string[]): Promise<void> 
 						text: `Requested by ${message.author.username}`,
 						iconURL: message.author.avatarURL()
 					},
-					...err
+					...result
 				}
 			});
-		}
-	});
+		});
 }

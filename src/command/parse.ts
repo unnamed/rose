@@ -11,6 +11,7 @@ export class ParseError implements Error {
 
 	constructor(
 		public id: string,
+		public title: string,
 		public message: string
 	) {
 	}
@@ -130,7 +131,8 @@ export class ArgumentIterator {
 		if (this.cursor >= this.args.length) {
 			throw new ParseError(
 				'arguments.insufficient',
-				'Insufficient Arguments'
+				'Insufficient Arguments',
+				'This command requires more arguments, check its usage'
 			);
 		}
 	}

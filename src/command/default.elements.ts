@@ -3,9 +3,10 @@ import {CommandElement, ParseContext, ParseError} from './parse';
 import {CommandParameter} from './command';
 import {Guild, Message} from 'discord.js';
 
-const tagRegex = new RegExp(/.+#[0-9]{4}$/g);
-const snowflakeRegex = new RegExp(/[0-9]{18}$/g);
-const mentionRegex = new RegExp(/<@!([0-9]{18})>$/g);
+const userTagPattern = new RegExp(/.+#[0-9]{4}$/g);
+const snowflakePattern = new RegExp(/[0-9]{18}$/g);
+const userMentionPattern = new RegExp(/<@!([0-9]{18})>$/g);
+const channelMentionPattern = new RegExp(/<#([0-9]{18})>/g);
 
 ///
 /// Member argument parser, resolves
@@ -24,18 +25,22 @@ elementCreators.set(
 				const message: Message = context.variables.get('message');
 				const guild: Guild = message.guild;
 				if (!guild) {
-					throw new ParseError('Not in a guild', 'This command must be executed in a guild!');
+					throw new ParseError(
+						'not-guild',
+						'Not in a Guild',
+						'This command must be executed in a guild!'
+					);
 				}
 				const member: string = context.args.next();
 
 				let found = undefined;
 				// check if it's an ID
-				if (member.match(snowflakeRegex)) {
+				if (member.match(snowflakePattern)) {
 					found = await guild.members.fetch(member);
 				}
 				// check if it's a mention
 				if (!found) {
-					const matches = member.matchAll(mentionRegex);
+					const matches = member.matchAll(userMentionPattern);
 					if (matches) {
 						const match = matches.next()?.value;
 						if (match) {
@@ -45,7 +50,7 @@ elementCreators.set(
 					}
 				}
 				// check if it's a tag
-				if (!found && member.match(tagRegex)) {
+				if (!found && member.match(userTagPattern)) {
 					found = guild.members.cache.find(m => m.user.tag === member);
 				}
 
@@ -53,6 +58,7 @@ elementCreators.set(
 					return found;
 				} else {
 					throw new ParseError(
+						'unknown-member',
 						'Member not found',
 						`A member with ID or tag \`${member}\` cannot be found.
             **Note:** Tags only work when the member is cached.`
@@ -89,14 +95,34 @@ elementCreators.set(
 		}
 
 		async parse(context: ParseContext) {
-			const arg = context.args.next();
-			// TODO: Enhance this
+			const arg = context.args.next().toLowerCase();
 			const message: Message = context.variables.get('message');
-			const channel = await message.guild.channels.resolve(arg);
+
+			let channel = await message.guild.channels.resolve(arg);
+
+			if (!channel) {
+				// try as a mention
+				const matches = arg.matchAll(channelMentionPattern);
+				if (matches) {
+					const match = matches.next()?.value;
+					if (match) {
+						channel = await message.guild.channels.resolve(match[1]);
+					}
+				}
+			}
+
+			if (!channel) {
+				// try as a name
+				channel = await message.guild.channels.cache
+					.find(c => c.type === 'voice' && c.name.toLowerCase() === arg);
+			}
+
 			if (!channel || channel.type !== 'voice') {
 				throw new ParseError(
 					'invalid-channel',
-					'Invalid channel, unknown channel or not a voice channel'
+					'Invalid Voice Channel',
+					`A voice channel with name or ID \`${arg}\` cannot be found
+					**Note:** Channel names only work if the channel is cached.`
 				);
 			}
 			context.values.set(this, channel);
@@ -123,7 +149,8 @@ elementCreators.set(
 			if (isNaN(value)) {
 				throw new ParseError(
 					'invalid-int',
-					'Invalid Argument: Not an integer'
+					'Invalid Argument',
+					`\`${arg}\` cannot be parsed as an integer, check usage`
 				);
 			}
 			context.values.set(this, value);
