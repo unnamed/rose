@@ -46,9 +46,11 @@ const command: Command = {
 			}
 		);
 		const invite = await result.json();
+		const link = `https://discord.gg/${invite.code}`;
 		throw {
 			title: 'Here we go',
-			description: `[Click here](https://discord.gg/${invite.code}) to join`
+			description: `[Click here](${link}) to join.`
+			+ ` You can copy and paste this link \`${link}\` to invite a friend.`
 		};
 	}
 };
