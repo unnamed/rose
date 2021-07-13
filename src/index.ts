@@ -1,4 +1,6 @@
 // load environment variables
+import {startIfCreated} from './http/server';
+
 require('dotenv').config();
 
 import {Client} from 'discord.js';
@@ -19,15 +21,16 @@ client.on('ready', () => {
 loadListeners(client);
 loadCommands();
 
-if (config.http.github.enabled) {
-	startGitHubWebhook(client)
-		.catch(console.error);
-}
+(async () => {
+	if (config.http.github.enabled) {
+		await startGitHubWebhook(client);
+	}
+	if (config.http.resourcePack.enabled) {
+		await startResourcePackServer()
+	}
+	await startIfCreated();
+})().catch(console.error);
 
-if (config.http.resourcePack.enabled) {
-	startResourcePackServer()
-		.catch(console.error);
-}
 
 client.login(process.env.BOT_TOKEN)
 	.catch(console.error);
