@@ -11,7 +11,7 @@ export async function startResourcePackServer() {
 		config.http.resourcePack.route,
 		upload.single('resourcepack'),
 		(req, res, next) => {
-			if (req.headers['Authorization'] !== process.env.RESOURCE_PACK_SECRET) {
+			if (req.headers['X-ResourcePack-Token'] !== process.env.RESOURCE_PACK_SECRET) {
 				res.status(500).json({
 					code: 500,
 					error: 'Invalid authorization!'
