@@ -13,11 +13,15 @@ export default {
 		'278642935426449418', // Toamto
 		'159425331143507968', // Neerixx
 	],
-	webhooks: {
+	http: {
+		port: 2346,
 		github: {
 			enabled: true,
-			path: '/github-webhook',
-			port: 2346
+			route: '/github-webhook'
+		},
+		resourcePack: {
+			enabled: true,
+			route: '/resource-pack'
 		}
 	}
 };

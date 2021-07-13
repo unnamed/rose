@@ -1,32 +1,26 @@
 import {Client} from 'discord.js';
-import http from 'http';
 import bl from 'bl';
 import crypto from 'crypto';
 
 import config from '../../config.js';
-import logger from '../../log';
 import {handleData} from './github.packet.receiver';
+import {getApp} from '../server';
 
 
-const webhookConfig = config.webhooks.github;
+const webhookConfig = config.http.github;
 
 // based on rvagg's github webhook handler: https://github.com/rvagg/github-webhook-handler
-export function start(client: Client) {
-	const server = http.createServer((req, res) => {
+export async function start(client: Client) {
+	const app = await getApp();
+
+	app.post(webhookConfig.route, (req, res) => {
 
 		function fail(message?) {
 			if (message) {
-				res.statusCode = 400;
-				res.end(message);
+				res.status(400).end(message);
 			} else {
-				res.statusCode = 404;
-				res.end('Not Found');
+				res.status(400).end('Not Found');
 			}
-		}
-
-		if (req.url !== webhookConfig.path || req.method !== 'POST') {
-			fail();
-			return;
 		}
 
 		const signature: string = req.headers['x-hub-signature'] as string;
@@ -65,8 +59,6 @@ export function start(client: Client) {
 				fail(e.message);
 			}
 		}));
-	});
 
-	server.listen(webhookConfig.port);
-	logger.info(`GitHub WebHook HTTP server running on port ${webhookConfig.port}`);
+	});
 }
