@@ -4,7 +4,7 @@ require('dotenv').config();
 import {Client} from 'discord.js';
 import logger from './log';
 import config from './config.js';
-import {start as startGitHubWebhook} from './webhook/github/github.webhook';
+import {start as startGitHubWebhook} from './http/github/github.webhook';
 
 import loadListeners from './loader/listener.loader';
 import loadCommands from './loader/command.loader';
