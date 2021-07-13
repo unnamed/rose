@@ -1,6 +1,7 @@
 import express from 'express';
 import config from '../config';
 import logger from '../log';
+import morgan from 'morgan';
 
 let app: express.Application;
 
@@ -8,7 +9,9 @@ export async function getApp(): Promise<express.Application> {
 	if (app) {
 		return app;
 	} else {
-		return app = express();
+		app = express();
+		app.use(morgan('dev'));
+		return app;
 	}
 }
 
