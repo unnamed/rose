@@ -5,6 +5,7 @@ import {Client} from 'discord.js';
 import logger from './log';
 import config from './config.js';
 import {start as startGitHubWebhook} from './http/github/github.webhook';
+import {startResourcePackServer} from './http/resourcepack/resourcepack';
 
 import loadListeners from './loader/listener.loader';
 import loadCommands from './loader/command.loader';
@@ -18,8 +19,14 @@ client.on('ready', () => {
 loadListeners(client);
 loadCommands();
 
-if (config.webhooks.github.enabled) {
-	startGitHubWebhook(client);
+if (config.http.github.enabled) {
+	startGitHubWebhook(client)
+		.catch(console.error);
+}
+
+if (config.http.resourcePack.enabled) {
+	startResourcePackServer()
+		.catch(console.error);
 }
 
 client.login(process.env.BOT_TOKEN)
