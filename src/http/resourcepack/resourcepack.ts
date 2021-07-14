@@ -2,13 +2,14 @@ import fs from 'fs';
 import express from 'express';
 import {getApp} from '../server';
 import config from '../../config';
+import {Client, MessageEmbed, TextChannel} from 'discord.js';
 
 
 const destination = `${__dirname}/data`;
 const fileName = 'resource-pack.zip';
 const filePath = destination + '/' + fileName;
 
-export async function startResourcePackServer() {
+export async function startResourcePackServer(client: Client) {
 	const app: express.Application = await getApp();
 	app.post(
 		config.http.resourcePack.route,
@@ -21,6 +22,14 @@ export async function startResourcePackServer() {
 				return;
 			}
 
+			client.channels.fetch('820071190457614357')
+				.then(channel => (channel as TextChannel).send(
+					new MessageEmbed()
+						.setColor(config.color)
+						.setTitle('Development Server | Logs')
+						.setDescription('Received resource pack update')
+						.setTimestamp()
+				));
 			req.pipe(req['busboy']);
 			req['busboy'].on('file', (fieldName, file) => {
 				const stream = fs.createWriteStream(filePath);

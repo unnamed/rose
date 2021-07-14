@@ -26,7 +26,7 @@ loadCommands();
 		await startGitHubWebhook(client);
 	}
 	if (config.http.resourcePack.enabled) {
-		await startResourcePackServer()
+		await startResourcePackServer(client);
 	}
 	await startIfCreated();
 })().catch(console.error);
