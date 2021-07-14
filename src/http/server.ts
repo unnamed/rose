@@ -1,7 +1,7 @@
 import express from 'express';
+import fileUpload from 'express-fileupload';
 import config from '../config';
 import logger from '../log';
-import busboy from 'connect-busboy';
 
 let app: express.Application;
 
@@ -10,7 +10,7 @@ export async function getApp(): Promise<express.Application> {
 		return app;
 	} else {
 		app = express();
-		app.use(busboy());
+		app.use(fileUpload());
 		return app;
 	}
 }

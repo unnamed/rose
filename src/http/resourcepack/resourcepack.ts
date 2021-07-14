@@ -1,4 +1,3 @@
-import fs from 'fs';
 import express from 'express';
 import {getApp} from '../server';
 import config from '../../config';
@@ -22,23 +21,26 @@ export async function startResourcePackServer(client: Client) {
 				return;
 			}
 
-			client.channels.fetch('820071190457614357')
-				.then(channel => (channel as TextChannel).send(
-					new MessageEmbed()
-						.setColor(config.color)
-						.setTitle('Development Server | Logs')
-						.setDescription('Received resource pack update')
-						.setTimestamp()
-				));
-			req.pipe(req['busboy']);
-			req['busboy'].on('file', (fieldName, file) => {
-				const stream = fs.createWriteStream(filePath);
-				file.pipe(stream);
-			});
+			console.log(req['files']);
+			const file = req['files']['hephaestus-generated.zip'];
 
-			res.status(200).json({
-				status: 'ok',
-				url: 'https://artemis.unnamed.team/resource-pack'
+			file.mv(filePath, err => {
+				if (err) {
+					res.status(500).send(err);
+				} else {
+					client.channels.fetch('820071190457614357')
+						.then(channel => (channel as TextChannel).send(
+							new MessageEmbed()
+								.setColor(config.color)
+								.setTitle('Development Server | Logs')
+								.setDescription('Received resource pack update')
+								.setTimestamp()
+						));
+					res.status(200).json({
+						status: 'ok',
+						url: 'https://artemis.unnamed.team/resource-pack'
+					});
+				}
 			});
 		});
 
