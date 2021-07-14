@@ -13,7 +13,7 @@ export async function startResourcePackServer() {
 	app.post(
 		config.http.resourcePack.route,
 		(req, res) => {
-			if (req.headers['x-unnamed-authorization'] !== process.env.RESOURCE_PACK_SECRET) {
+			if (req.headers['authorization'] !== process.env.RESOURCE_PACK_SECRET) {
 				res.status(500).json({
 					code: 500,
 					error: 'Invalid authorization!'
