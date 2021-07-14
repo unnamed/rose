@@ -3,7 +3,6 @@ import {getApp} from '../server';
 import config from '../../config';
 import {Client, MessageEmbed, TextChannel} from 'discord.js';
 
-
 const destination = `${__dirname}/data`;
 const fileName = 'resource-pack.zip';
 const filePath = destination + '/' + fileName;
@@ -21,8 +20,7 @@ export async function startResourcePackServer(client: Client) {
 				return;
 			}
 
-			console.log(req['files']);
-			const file = req['files']['hephaestus-generated.zip'];
+			const file = req['files']['resourcepack'];
 
 			file.mv(filePath, err => {
 				if (err) {
