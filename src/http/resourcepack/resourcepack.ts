@@ -27,7 +27,10 @@ export async function startResourcePackServer() {
 				file.pipe(stream);
 			});
 
-			res.status(200).json({ status: 'ok' });
+			res.status(200).json({
+				status: 'ok',
+				url: 'https://artemis.unnamed.team/resource-pack'
+			});
 		});
 
 	app.get(
