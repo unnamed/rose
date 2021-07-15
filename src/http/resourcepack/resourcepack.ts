@@ -41,8 +41,8 @@ export async function startResourcePackServer(client: Client) {
 									(channel as TextChannel).guild.iconURL({ size: 64, format: 'png'})
 								)
 								.setDescription('Received resource pack update')
-								.addField('Hash (sha1)', hash, true)
-								.addField('User Agent', req.headers['user-agent'], true)
+								.addField('Hash (sha1)', '```' + hash + '```', true)
+								.addField('User Agent', '```' + req.headers['user-agent'] + '```', true)
 								.setTimestamp()
 						));
 					res.status(200).json({
