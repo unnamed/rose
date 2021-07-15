@@ -28,7 +28,7 @@ export async function startResourcePackServer(client: Client) {
 				if (err) {
 					res.status(500).send(err);
 				} else {
-					const hashSum = crypto.createHash('sha256');
+					const hashSum = crypto.createHash('sha1');
 					hashSum.update(file.data);
 					const hash = hashSum.digest('hex');
 
@@ -36,8 +36,13 @@ export async function startResourcePackServer(client: Client) {
 						.then(channel => (channel as TextChannel).send(
 							new MessageEmbed()
 								.setColor(config.color)
-								.setTitle('Development Server | Logs')
-								.setDescription(`Received resource pack update, hash: \`${hash}\``)
+								.setAuthor(
+									'Development Server | Logs',
+									(channel as TextChannel).guild.iconURL({ size: 64, format: 'png'})
+								)
+								.setDescription('Received resource pack update')
+								.addField('Hash (sha1)', hash, true)
+								.addField('User Agent', req.headers['user-agent'], true)
 								.setTimestamp()
 						));
 					res.status(200).json({
