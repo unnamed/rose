@@ -31,7 +31,7 @@ handlers.set('star', async (client: Client, event: Star) => {
         .setColor(config.color)
         .setTitle(`[${event.repository.full_name}] stared!`)
         .setAuthor(event.sender.login, event.sender.avatar_url, event.sender.html_url)
-        .setURL(event.repository.url)
+        .setURL(event.repository.html_url)
         .setDescription(`Thank you ${event.sender.login} for the star!`)
     );
   }

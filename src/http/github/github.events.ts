@@ -105,7 +105,25 @@ export interface Star {
   action: 'created' | 'deleted'; // 'created', 'deleted'
   // the time the star was created in ISO 8601 format, null for 'deleted' action.
   starred_at?: string;
-  repository: Repository;
+  repository: {
+    // repository id
+    id: number;
+    // single repo name 'bot'
+    name: string;
+    private: boolean;
+    // full repo name 'unnamed/bot'
+    full_name: string;
+    // api url to this repository
+    url: string;
+    // url to this repository
+    html_url: string;
+    // number of watchers
+    watchers: number;
+    // number of stargazers
+    stargazers: number;
+    // number of forks
+    forks_count: number;
+  };
   organization?: Organization;
   sender: {
     login: string;
