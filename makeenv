@@ -19,6 +19,6 @@ if ! [ -f ".env" ]; then
     ##
     echo ">>> Enter the '$variable' value"
     read -p ">>> " value
-    echo "$variable=$value" >> ".env"
+    echo "$variable=$value" >>".env"
   done
 fi

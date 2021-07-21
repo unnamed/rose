@@ -6,6 +6,6 @@ import {PartialCommand} from './command';
  * the given command by checking its permissions
  */
 export function hasPermissions(message: Message, command: PartialCommand): boolean {
-	return command.permissions?.use?.every(perm => message.member.hasPermission(perm))
-		&& command.permissions?.execute?.every(perm => message.guild.me.hasPermission(perm));
+  return command.permissions?.use?.every(perm => message.member.hasPermission(perm))
+    && command.permissions?.execute?.every(perm => message.guild.me.hasPermission(perm));
 }

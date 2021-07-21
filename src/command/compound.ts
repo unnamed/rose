@@ -7,26 +7,26 @@ import {CommandElement, ParseContext} from './parse';
  */
 export class CommandElementCompound extends CommandElement {
 
-	constructor(
-		name: string,
-		public components: CommandElement[]
-	) {
-		super(name);
-	}
+  constructor(
+    name: string,
+    public components: CommandElement[]
+  ) {
+    super(name);
+  }
 
-	/**
-	 * @inheritdoc
-	 * Returns the joined representation of this
-	 * element and its components
-	 */
-	get representation(): string {
-		return `${this.name} ${this.components.map(component => component.name).join(' ')}`;
-	}
+  /**
+   * @inheritdoc
+   * Returns the joined representation of this
+   * element and its components
+   */
+  get representation(): string {
+    return `${this.name} ${this.components.map(component => component.name).join(' ')}`;
+  }
 
-	async parse(context: ParseContext): Promise<void> {
-		for (const component of this.components) {
-			await component.parse(context);
-		}
-	}
+  async parse(context: ParseContext): Promise<void> {
+    for (const component of this.components) {
+      await component.parse(context);
+    }
+  }
 
 };

@@ -1,5 +1,25 @@
-// empty marker listener loader, the code is generated
-// (to JavaScript) by the 'generate.listener.loader.js' script
+import fs from 'fs';
+import {Client} from 'discord.js';
+import logger from '../log';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default (ignored): void => { /* empty */ };
+const extension = '.js';
+const suffix = `.listener${extension}`;
+
+export default (client: Client) => {
+  const count = fs.readdirSync(`${__dirname}/../listener/`)
+    .filter(name => name.endsWith(suffix))
+    .reduce((count, name) => {
+      const canonName = name.slice(0, -extension.length);
+
+      import(`../listener/${canonName}`)
+        .then(listener => {
+          const { name, execute } = listener.default;
+          client.on(name, execute);
+        })
+        .catch(console.error);
+
+      return count + 1;
+    }, 0);
+
+  logger.info(`Successfully loaded ${count} event listeners`);
+};

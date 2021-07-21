@@ -13,27 +13,27 @@ const handlers = new Map<string, (client: Client, data: any) => Promise<void>>()
  * as argument
  */
 export function handleData(client: Client, event: string, data: unknown): void {
-	const handle = handlers.get(event);
-	if (handle) {
-		handle(client, data)
-			.catch(console.error);
-	}
+  const handle = handlers.get(event);
+  if (handle) {
+    handle(client, data)
+      .catch(console.error);
+  }
 }
 
 //#region Handlers
 handlers.set('push', onPush);
 handlers.set('pull_request', onPullRequest);
 handlers.set('star', async (client: Client, event: Star) => {
-	const channel = await client.channels.fetch('805139625256419338') as TextChannel;
-	if (event.action === 'created') {
-		await channel.send(
-			new MessageEmbed()
-				.setColor(config.color)
-				.setTitle(`[${event.repository.full_name}] stared!`)
-				.setAuthor(event.sender.login, event.sender.avatar_url, event.sender.html_url)
-				.setURL(event.repository.url)
-				.setDescription(`Thank you ${event.sender.login} for the star!`)
-		);
-	}
+  const channel = await client.channels.fetch('805139625256419338') as TextChannel;
+  if (event.action === 'created') {
+    await channel.send(
+      new MessageEmbed()
+        .setColor(config.color)
+        .setTitle(`[${event.repository.full_name}] stared!`)
+        .setAuthor(event.sender.login, event.sender.avatar_url, event.sender.html_url)
+        .setURL(event.repository.url)
+        .setDescription(`Thank you ${event.sender.login} for the star!`)
+    );
+  }
 });
 //#endregion
