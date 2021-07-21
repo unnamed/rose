@@ -1,63 +1,28 @@
-import crypto from 'crypto';
-import express from 'express';
-import {getApp} from '../server';
-import config from '../../config';
-import {Client, MessageEmbed, TextChannel} from 'discord.js';
+import path from 'path';
+import fs from 'fs';
 
-const destination = `${__dirname}/data`;
-const fileName = 'resource-pack.zip';
-const filePath = destination + '/' + fileName;
+import { Application, Router } from 'express';
+import { getApp } from '../server';
+import config from '../../config';
+import { Client } from 'discord.js';
+
+import useUpload from './upload.route';
+import useDownload from './download.route';
 
 export async function startResourcePackServer(client: Client) {
-  const app: express.Application = await getApp();
-  app.post(
-    config.http.resourcePack.route,
-    (req, res) => {
-      if (req.headers['authorization'] !== process.env.RESOURCE_PACK_SECRET) {
-        res.status(500).json({
-          code: 500,
-          error: 'Invalid authorization!'
-        });
-        return;
-      }
 
-      const file = req['files']['resourcepack'];
-      console.log(file);
+  const dataDir = path.join(process.env.ROOT_DIR_PATH, config.http.resourcePack.dataDir);
 
-      file.mv(filePath, err => {
-        if (err) {
-          res.status(500).send(err);
-        } else {
-          const hashSum = crypto.createHash('sha1');
-          hashSum.update(file.data);
-          const hash = hashSum.digest('hex');
+  // create if it doesn't exist
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir);
+  }
 
-          client.channels.fetch('820071190457614357')
-            .then(channel => (channel as TextChannel).send(
-              new MessageEmbed()
-                .setColor(config.color)
-                .setAuthor(
-                  'Development Server | Logs',
-                  (channel as TextChannel).guild.iconURL({size: 64, format: 'png'})
-                )
-                .setDescription('Received resource pack update')
-                .addField('Hash (sha1)', '```' + hash + '```', true)
-                .addField('User Agent', '```' + req.headers['user-agent'] + '```', true)
-                .setTimestamp()
-            ));
-          res.status(200).json({
-            status: 'ok',
-            url: 'https://artemis.unnamed.team/resource-pack',
-            hash
-          });
-        }
-      });
-    });
+  const app: Application = await getApp();
+  const router: Router = Router();
 
-  app.get(
-    config.http.resourcePack.route,
-    (req, res) => {
-      res.download(filePath);
-    }
-  );
+  useUpload(router, client, dataDir);
+  useDownload(router, dataDir);
+
+  app.use(config.http.resourcePack.route, router);
 }

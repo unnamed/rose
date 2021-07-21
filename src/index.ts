@@ -1,4 +1,5 @@
 // load environment variables
+import path from 'path';
 import {startIfCreated} from './http/server';
 import {Client} from 'discord.js';
 import logger from './log';
@@ -10,6 +11,8 @@ import loadListeners from './loader/listener.loader';
 import loadCommands from './loader/command.loader';
 
 require('dotenv').config();
+
+process.env.ROOT_DIR_PATH = path.join(__dirname, '..');
 
 const client = new Client();
 

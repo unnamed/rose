@@ -21,7 +21,8 @@ export default {
     },
     resourcePack: {
       enabled: true,
-      route: '/resource-pack'
+      route: '/resource-pack',
+      dataDir: 'build/data'
     }
   }
 };
