@@ -8,7 +8,7 @@ import {HttpModule} from '../http.service';
 
 // based on rvagg's github webhook handler: https://github.com/rvagg/github-webhook-handler
 export function githubWebhook(client: Client): HttpModule {
-  return async (app: express.Application, moduleConfig: Record<string, any>) => {
+  return async (app: express.Application, moduleConfig: NodeJS.Dict<any>) => {
     app.post(moduleConfig.route, (req, res) => {
 
       function fail(message?) {
@@ -19,8 +19,10 @@ export function githubWebhook(client: Client): HttpModule {
         }
       }
 
-      const signature: string = req.headers['x-hub-signature'][0];
-      const event: string = req.headers['x-github-event'][0];
+      console.log(req.headers);
+
+      const signature: string = req.headers['x-hub-signature'] as string;
+      const event: string = req.headers['x-github-event'] as string;
 
       if (!signature || !event || !req.headers['x-github-delivery']) {
         fail('signature, event and delivery are required headers!');
