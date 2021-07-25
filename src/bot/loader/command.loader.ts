@@ -1,5 +1,5 @@
 import fs from 'fs';
-import logger from '../log';
+import logger from '../../log';
 import {register} from '../command/command.manager';
 import {Command} from '../command/command';
 

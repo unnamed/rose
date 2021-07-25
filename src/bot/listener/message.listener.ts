@@ -1,7 +1,7 @@
-import config from '../config.js';
+import config from '../../config.js';
 import {Message} from 'discord.js';
 import {dispatch} from '../command/command.manager';
-import logger from '../log';
+import logger from '../../log';
 
 /**
  * Map containing all the user

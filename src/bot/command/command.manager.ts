@@ -2,10 +2,10 @@ import {Command, PartialCommand} from './command';
 import {ArgumentIterator, ElementCreator, ParseContext, ParseError} from './parse';
 import {CommandElementCompound} from './compound';
 import {ParentCommandElement} from './parent';
-import config from '../config.js';
+import config from '../../config.js';
 import {Message} from 'discord.js';
 import {hasPermissions} from './command.util';
-import logger from '../log';
+import logger from '../../log';
 
 export const registry = new Map<string, Command>();
 export const elementCreators = new Map<string, ElementCreator>();

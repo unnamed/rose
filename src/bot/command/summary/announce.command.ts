@@ -1,5 +1,5 @@
 import {Command} from '../command';
-import config from '../../config.js';
+import config from '../../../config.js';
 import {Message, TextChannel} from 'discord.js';
 
 const command: Command = {

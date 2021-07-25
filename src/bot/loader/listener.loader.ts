@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {Client} from 'discord.js';
-import logger from '../log';
+import logger from '../../log';
 
 const extension = '.js';
 const suffix = `.listener${extension}`;

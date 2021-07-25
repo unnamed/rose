@@ -15,14 +15,16 @@ export default {
   ],
   http: {
     port: 2346,
-    github: {
-      enabled: true,
-      route: '/github-webhook'
-    },
-    resourcePack: {
-      enabled: true,
-      route: '/resource-pack',
-      dataDir: 'build/data'
+    modules: {
+      githubWebhook: {
+        enabled: true,
+        route: '/github-webhook'
+      },
+      fileServer: {
+        enabled: true,
+        route: '/files',
+        dataDir: 'build/data'
+      }
     }
   }
 };
