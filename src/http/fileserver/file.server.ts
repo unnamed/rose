@@ -9,7 +9,7 @@ import useUpload from './upload.route';
 import useDownload from './download.route';
 
 export function fileServer(client: Client): HttpModule {
-  return async (app: Application, moduleConfig: Record<string, any>) => {
+  return async (app: Application, moduleConfig: NodeJS.Dict<any>) => {
     const dataDir = path.join(process.env.ROOT_DIR_PATH, moduleConfig.dataDir);
 
     // create if it doesn't exist
@@ -19,7 +19,7 @@ export function fileServer(client: Client): HttpModule {
 
     const router: Router = Router();
 
-    useUpload(router, client, dataDir);
+    useUpload(router, client, dataDir, moduleConfig);
     useDownload(router, dataDir);
 
     app.use(moduleConfig.route, router);

@@ -7,7 +7,8 @@ import config from '../../config';
 export default (
   router: Router,
   client: Client,
-  dataDir: string
+  dataDir: string,
+  moduleConfig: NodeJS.Dict<any>
 ) => {
   router.post('/upload/:id', (req, res) => {
 
@@ -22,7 +23,6 @@ export default (
     }
 
     const file = req['files']['resourcepack'];
-    console.log(file);
 
     file.mv(path.join(dataDir, id), err => {
       if (err) {
@@ -33,7 +33,7 @@ export default (
       const hashSum = crypto.createHash('sha1');
       hashSum.update(file.data);
       const hash = hashSum.digest('hex');
-      const downloadUrl = `https://artemis.unnamed.team/resource-pack/get/${id}`;
+      const downloadUrl = `https://artemis.unnamed.team${moduleConfig.route}/get/${id}`;
 
       client.channels.fetch('820071190457614357')
         .then(channel => (channel as TextChannel).send(
@@ -48,7 +48,7 @@ export default (
             .addField('Hash (sha1)', '```' + hash + '```', true)
             .addField('Application', '```' + id + '```', true)
             .addField('User Agent', '```' + req.headers['user-agent'] + '```', true)
-            .addField('Download URL', '```' + downloadUrl + "```", true)
+            .addField('Download URL', '```' + downloadUrl + '```', true)
             .setTimestamp()
         ));
       res.status(200).json({

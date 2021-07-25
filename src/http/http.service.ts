@@ -5,7 +5,7 @@ import logger from '../log';
 
 export type HttpModule = (
   app: express.Application,
-  config: Record<string, any>
+  config: NodeJS.Dict<any>
 ) => Promise<void>;
 
 export class HttpServer {
