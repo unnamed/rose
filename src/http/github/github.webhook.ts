@@ -19,10 +19,8 @@ export function githubWebhook(client: Client): HttpModule {
         }
       }
 
-      console.log(req.headers);
-
-      const signature: string = req.headers['x-hub-signature'] as string;
-      const event: string = req.headers['x-github-event'] as string;
+      const signature: string = req.headers['x-hub-signature'][0];
+      const event: string = req.headers['x-github-event'][0];
 
       if (!signature || !event || !req.headers['x-github-delivery']) {
         fail('signature, event and delivery are required headers!');
