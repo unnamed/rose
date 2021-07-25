@@ -1,6 +1,6 @@
 # unnamed/backend
 
-Official Unnamed Team's backend, a collection of 
+Official Unnamed Team's backend, a collection of services
 
 ## Running
 
