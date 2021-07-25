@@ -13,8 +13,8 @@ export default (client: Client) => {
 
       import(`../listener/${canonName}`)
         .then(listener => {
-          const { name, execute } = listener.default;
-          client.on(name, execute);
+          const { event, execute } = listener.default;
+          client.on(event, execute);
         })
         .catch(console.error);
 
