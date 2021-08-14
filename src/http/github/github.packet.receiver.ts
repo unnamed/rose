@@ -4,6 +4,7 @@ import config from '../../config';
 
 import onPush from './push.listener';
 import onPullRequest from './pull.request.listener';
+import onCheckRun from './check.run.listener';
 
 const handlers = new Map<string, (client: Client, data: any) => Promise<void>>();
 
@@ -23,6 +24,7 @@ export function handleData(client: Client, event: string, data: unknown): void {
 //#region Handlers
 handlers.set('push', onPush);
 handlers.set('pull_request', onPullRequest);
+handlers.set('check_run', onCheckRun);
 handlers.set('star', async (client: Client, event: Star) => {
   const channel = await client.channels.fetch('805139625256419338') as TextChannel;
   if (event.action === 'created') {

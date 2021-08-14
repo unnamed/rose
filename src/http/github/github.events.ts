@@ -165,3 +165,29 @@ export interface Push {
   ];
 
 }
+
+// event name: "check_run"
+export interface CheckRun {
+
+  // action, I've only seen 'created', I should check the documentation but I'm too lazy
+  action: 'created' | string;
+
+  check_run: {
+    output: {
+      title: string;
+      summary: string;
+    }
+  };
+
+  // the repository where the check ran, GitHub is A LITTLE BIT inconsistent
+  // so I can't use the Repository interface here
+  repository: {
+    // repo name, i.e. "webpage"
+    name: string;
+    // full repo name, i.e. "unnamed/webpage"
+    full_name: string;
+    // url to the html page
+    html_url: string;
+  }
+
+}
