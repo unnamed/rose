@@ -3,6 +3,7 @@ import {Router} from 'express';
 import crypto from 'crypto';
 import {Client, MessageEmbed, TextChannel} from 'discord.js';
 import config from '../../config';
+import {formatBytes} from '../../util/format';
 
 export default (
   router: Router,
@@ -67,7 +68,7 @@ export default (
             )
             .setDescription('Received resource pack update')
             .addField('Hash (sha1)', '```' + hash + '```', true)
-            .addField('Size', '```' + file.size + '```', true)
+            .addField('Size', '```' + formatBytes(file.size) + '```', true)
             .addField('Application', '```' + id + '```', true)
             .addField('User Agent', '```' + req.headers['user-agent'] + '```', true)
             .addField('Download URL', '```' + downloadUrl + '```', true)
