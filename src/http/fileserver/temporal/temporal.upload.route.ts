@@ -53,6 +53,7 @@ export default (
       res.status(200).json({
         status: 'ok',
         url: downloadUrl,
+        id,
         hash
       });
     });
