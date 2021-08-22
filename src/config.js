@@ -15,6 +15,9 @@ export default {
   ],
   http: {
     port: 2346,
+    // enable if running behind a reverse proxy
+    // https://expressjs.com/en/guide/behind-proxies.html
+    trustProxy: false,
     modules: {
       githubWebhook: {
         enabled: true,
@@ -24,6 +27,16 @@ export default {
         enabled: true,
         route: '/files',
         dataDir: 'build/data'
+      },
+      temporalFileServer: {
+        enabled: true,
+        route: '/tempfiles',
+        lifetime: 5 * 60 * 1000, // file lifetime, 5 minutes should be enough
+        limits: {
+          size: 200 * 1000, // 200KB should be enough
+          windowMs: 60 * 60 * 1000, // 1 hour
+          max: 5 // 5 request per hour
+        }
       }
     }
   }

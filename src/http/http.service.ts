@@ -31,6 +31,11 @@ export class HttpServer {
     }
 
     const app = express();
+
+    if (config.http.trustProxy) {
+      app.set('trust proxy', 1);
+    }
+
     app.use(fileUpload());
 
     logger.info(`Starting HTTP server with ${enabledModules.size} modules`);
