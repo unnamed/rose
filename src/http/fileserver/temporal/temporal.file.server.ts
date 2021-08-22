@@ -15,7 +15,7 @@ export function temporalFileServer(): HttpModule {
     useDownload(router, moduleConfig, files);
 
     app.use(moduleConfig.route, rateLimit({
-      windowMs: moduleConfig.limits.rate.window,
+      windowMs: moduleConfig.limits.rate.windowMs,
       max: moduleConfig.limits.rate.max
     }));
     app.use(moduleConfig.route, router);
