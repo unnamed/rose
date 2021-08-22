@@ -19,9 +19,6 @@ export default (
         deleted = fileMap.delete(id);
       }
 
-      // TODO: just debugging, remove later
-      console.log(`type: ${typeof buffer}`);
-
       res.status(200).json({
         status: 'ok',
         file: Buffer.from(buffer).toString('base64'),
