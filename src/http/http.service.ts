@@ -1,5 +1,6 @@
 import express from 'express';
 import fileUpload from 'express-fileupload';
+import cors from 'cors';
 import config from '../config';
 import logger from '../log';
 
@@ -37,6 +38,10 @@ export class HttpServer {
     }
 
     app.use(fileUpload());
+    app.use(cors({
+      origin: 'https://unnamed.team/',
+      optionsSuccessStatus: 200
+    }));
 
     logger.info(`Starting HTTP server with ${enabledModules.size} modules`);
 
