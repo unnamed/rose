@@ -7,12 +7,13 @@ export default (
   moduleConfig: NodeJS.Dict<any>,
   fileMap: Map<string, any>
 ) => {
+  const ipIdMap = new Map<string, string>();
   router.post(
     '/upload',
     (req, res) => {
 
-      // File identifier
-      const id = Date.now().toString(36);
+      // The request IP
+      const ip = req.ip;
 
       // function to set status code and error
       function fail(code: number, error: string) {
@@ -40,8 +41,17 @@ export default (
         return fail(413, `File is too large, limit is ${formatBytes(moduleConfig.limits.size)}`);
       }
 
+      let id = ipIdMap.get(ip);
+      if (id === undefined) {
+        id = Date.now().toString(36);
+        ipIdMap.set(ip, id);
+      }
+
       fileMap.set(id, file.data);
-      setTimeout(() => fileMap.delete(id), moduleConfig.lifetime);
+      setTimeout(() => {
+        fileMap.delete(id);
+        ipIdMap.delete(ip);
+      }, moduleConfig.lifetime);
 
       // compute file hash
       const hashSum = crypto.createHash('sha1');

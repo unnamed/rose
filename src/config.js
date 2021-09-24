@@ -34,10 +34,6 @@ export default {
         lifetime: 5 * 60 * 1000, // file lifetime, 5 minutes should be enough
         limits: {
           size: 200 * 1000, // 200KB should be enough
-          rate: {
-            windowMs: 60 * 60 * 1000, // 1 hour
-            max: 5 // 5 request per hour
-          }
         }
       }
     }

@@ -1,6 +1,5 @@
 import {HttpModule} from '../../http.service';
 import {Application, Router} from 'express';
-import rateLimit from 'express-rate-limit';
 
 import useUpload from './temporal.upload.route';
 import useDownload from './temporal.get.route';
@@ -14,10 +13,6 @@ export function temporalFileServer(): HttpModule {
     useUpload(router, moduleConfig, files);
     useDownload(router, moduleConfig, files);
 
-    app.use(moduleConfig.route, rateLimit({
-      windowMs: moduleConfig.limits.rate.windowMs,
-      max: moduleConfig.limits.rate.max
-    }));
     app.use(moduleConfig.route, router);
   };
 }
