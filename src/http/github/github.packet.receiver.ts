@@ -28,14 +28,14 @@ handlers.set('check_run', onCheckRun);
 handlers.set('star', async (client: Client, event: Star) => {
   const channel = await client.channels.fetch('805139625256419338') as TextChannel;
   if (event.action === 'created') {
-    await channel.send(
+    await channel.send({ embeds: [
       new MessageEmbed()
         .setColor(config.color)
         .setTitle(`[${event.repository.full_name}] stared!`)
         .setAuthor(event.sender.login, event.sender.avatar_url, event.sender.html_url)
         .setURL(event.repository.html_url)
         .setDescription(`Thank you ${event.sender.login} for the star!`)
-    );
+    ]});
   }
 });
 //#endregion

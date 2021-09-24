@@ -58,7 +58,7 @@ export default (
 
       // notify about the upload
       client.channels.fetch('820071190457614357')
-        .then(channel => (channel as TextChannel).send(
+        .then(channel => (channel as TextChannel).send({ embeds: [
           new MessageEmbed()
             .setColor(config.color)
             .setAuthor(
@@ -73,7 +73,7 @@ export default (
             .addField('User Agent', '```' + req.headers['user-agent'] + '```', true)
             .addField('Download URL', '```' + downloadUrl + '```', true)
             .setTimestamp()
-        ));
+        ]}));
 
       // finally set the response
       res.status(200).json({

@@ -1,16 +1,12 @@
-import {Command} from '../command';
-
 import fetch from 'node-fetch';
+import CommandBuilder from '../command.builder';
 
 const baseUrl = 'https://repo.unnamed.team/service/rest/v1';
 
-const command: Command = {
-  name: 'repo',
-  category: 'team',
-  description: 'Check the status of our repository',
-  arguments: [],
-  async execute() {
-
+export default new CommandBuilder()
+  .setName('repo')
+  .setDescription('Check the status of our Maven repository')
+  .setExecutor(async interaction => {
     let repositories;
     let ping;
 
@@ -47,7 +43,5 @@ const command: Command = {
       description: `Nexus is online, response time: \`${ping / 1000}\`s.`,
       fields
     };
-  }
-};
-
-export default command;
+  })
+  .build();

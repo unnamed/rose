@@ -16,7 +16,7 @@ export default async (client: Client, event: CheckRun) => {
   const channel = await client.channels.fetch('805139625256419338') as TextChannel;
   const iconURL = channel.guild.iconURL({size: 64, format: 'png'});
 
-  await channel.send(
+  await channel.send({ embeds: [
     new MessageEmbed()
       .setColor(config.color)
       .setAuthor(
@@ -25,5 +25,5 @@ export default async (client: Client, event: CheckRun) => {
         event.repository.html_url
       )
       .setDescription(summary)
-  );
+  ]});
 };

@@ -13,7 +13,7 @@ export default {
     const channel = (await member.guild.channels.resolve('685983240192000006')) as TextChannel;
 
     await channel.send({
-      embed: {
+      embeds: [{
         description: 'A new user joined the server, say welcome!',
         color: config.color,
         author: {
@@ -23,7 +23,7 @@ export default {
             format: 'png'
           })
         }
-      }
+      }]
     });
   }
 };

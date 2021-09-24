@@ -21,6 +21,6 @@ export default async (client: Client, event: PullRequestEvent) => {
       embed.setDescription(event.pull_request.body);
     }
 
-    await channel.send(embed);
+    await channel.send({ embeds: [embed] });
   }
 };

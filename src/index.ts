@@ -11,11 +11,12 @@ import {temporalFileServer} from './http/fileserver/temporal/temporal.file.serve
 require('dotenv').config();
 process.env.ROOT_DIR_PATH = path.join(__dirname, '..');
 
-const client = startBot();
+(async function() {
+  const client = await startBot();
+  await new HttpServer()
+    .install('fileServer', fileServer(client))
+    .install('githubWebhook', githubWebhook(client))
+    .install('temporalFileServer', temporalFileServer())
+    .start();
+})().catch(console.error);
 
-new HttpServer()
-  .install('fileServer', fileServer(client))
-  .install('githubWebhook', githubWebhook(client))
-  .install('temporalFileServer', temporalFileServer())
-  .start()
-  .catch(console.error);

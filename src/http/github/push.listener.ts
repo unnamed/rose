@@ -17,12 +17,12 @@ export default async (client: Client, event: Push) => {
   const iconURL = channel.guild.iconURL({size: 64, format: 'png'});
 
   async function sendNewEmbed() {
-    lastEmbedMessageId = (await channel.send(
+    lastEmbedMessageId = (await channel.send({ embeds: [
       new MessageEmbed()
         .setColor(config.color)
         .setAuthor(title, iconURL, event.repository.url)
         .setDescription(history)
-    )).id;
+    ]})).id;
   }
 
   if (!lastEmbedMessageId) {
@@ -35,12 +35,12 @@ export default async (client: Client, event: Push) => {
       || (lastEmbed.description.match(/\n/g) ?? []).length > 7) {
       await sendNewEmbed();
     } else {
-      await lastEmbedMessage.edit(
+      await lastEmbedMessage.edit({ embeds: [
         new MessageEmbed()
           .setColor(config.color)
           .setAuthor(title, iconURL, event.repository.url)
           .setDescription(lastEmbed.description + '\n' + history)
-      );
+      ]});
     }
   }
 };
