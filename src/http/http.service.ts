@@ -38,10 +38,7 @@ export class HttpServer {
     }
 
     app.use(fileUpload());
-    app.use(cors({
-      origin: 'https://unnamed.team/',
-      optionsSuccessStatus: 200
-    }));
+    app.use(cors());
 
     logger.info(`Starting HTTP server with ${enabledModules.size} modules`);
 
