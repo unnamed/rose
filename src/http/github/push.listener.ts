@@ -25,10 +25,10 @@ export default async (client: Client, event: Push) => {
     ]})).id;
   }
 
-  if (!lastEmbedMessageId) {
+  let lastEmbedMessage;
+  if (!lastEmbedMessageId || !(lastEmbedMessage = await channel.messages.fetch(lastEmbedMessageId))) {
     await sendNewEmbed();
   } else {
-    const lastEmbedMessage = await channel.messages.fetch(lastEmbedMessageId);
     const lastEmbed = lastEmbedMessage.embeds[0];
 
     if (lastEmbed.author.name !== title
