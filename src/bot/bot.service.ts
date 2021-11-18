@@ -3,6 +3,7 @@ import logger from '../log';
 
 import loadListeners from './loader/listener.loader';
 import loadCommands from './loader/command.loader';
+import config from '../config';
 
 /**
  * Starts the Discord Bot service using the token
@@ -29,7 +30,12 @@ export default async (): Promise<Client> => {
           await command.executor(commandInteraction);
         } catch (thrown) {
           if (thrown.title !== undefined) {
-            await commandInteraction.reply({ embeds: [ thrown as MessageEmbed ]});
+            await commandInteraction.reply({ embeds: [ {
+              color: config.color,
+              ...thrown
+            } as MessageEmbed ]});
+          } else {
+            console.error(thrown);
           }
         }
       }
