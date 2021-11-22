@@ -23,11 +23,6 @@ export default {
         enabled: true,
         route: '/github-webhook'
       },
-      fileServer: {
-        enabled: true,
-        route: '/files',
-        dataDir: 'build/data'
-      },
       temporalFileServer: {
         enabled: true,
         route: '/tempfiles',
