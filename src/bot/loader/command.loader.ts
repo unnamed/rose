@@ -4,6 +4,7 @@ import {Command} from '../command/command.builder';
 import {Client} from 'discord.js';
 import {REST} from '@discordjs/rest';
 import {Routes} from 'discord-api-types/v9';
+import config from '../../../config';
 
 const extension = '.js';
 const suffix = `.command${extension}`;
@@ -24,7 +25,7 @@ export default async function loadCommands(client: Client): Promise<Map<string, 
 
   const guildId = '683899335405994062';
   const rest = new REST({ version: '9' })
-    .setToken(process.env.BOT_TOKEN);
+    .setToken(config.discord.token);
 
   const response = await rest.put(
     Routes.applicationGuildCommands(client.application.id, guildId),

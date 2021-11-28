@@ -1,7 +1,6 @@
 import {Client, CommandInteraction, Intents, MessageEmbed} from 'discord.js';
 import logger from '../log';
 
-import loadListeners from './loader/listener.loader';
 import loadCommands from './loader/command.loader';
 import config from '../../config';
 
@@ -41,8 +40,6 @@ export default async (): Promise<Client> => {
       }
     }
   });
-
-  loadListeners(client);
 
   return client;
 };

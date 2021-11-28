@@ -29,6 +29,13 @@ export default new CommandBuilder()
       }
     }
 
+    if (!author.identities) {
+      throw {
+        title: 'Invalid Username',
+        description: 'Given user does not have linked identities'
+      };
+    }
+
     const discordIdentity = author.identities['discord'];
     if (discordIdentity === undefined || discordIdentity !== interaction.user.tag) {
       throw {
