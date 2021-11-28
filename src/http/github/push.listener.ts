@@ -25,22 +25,26 @@ export default async (client: Client, event: Push) => {
     ]})).id;
   }
 
-  let lastEmbedMessage;
-  if (!lastEmbedMessageId || !(lastEmbedMessage = await channel.messages.fetch(lastEmbedMessageId))) {
+  if (!lastEmbedMessageId) {
     await sendNewEmbed();
-  } else {
-    const lastEmbed = lastEmbedMessage.embeds[0];
-
-    if (lastEmbed.author.name !== title
-      || (lastEmbed.description.match(/\n/g) ?? []).length > 7) {
-      await sendNewEmbed();
-    } else {
-      await lastEmbedMessage.edit({ embeds: [
-        new MessageEmbed()
-          .setColor(config.color)
-          .setAuthor(title, iconURL, event.repository.url)
-          .setDescription(lastEmbed.description + '\n' + history)
-      ]});
-    }
+    return;
   }
+
+  channel.messages.fetch(lastEmbedMessageId)
+    .then(lastEmbedMessage => {
+      const lastEmbed = lastEmbedMessage.embeds[0];
+
+      if (lastEmbed.author.name !== title
+        || (lastEmbed.description.match(/\n/g) ?? []).length > 7) {
+        sendNewEmbed().catch(console.error);
+      } else {
+        lastEmbedMessage.edit({ embeds: [
+          new MessageEmbed()
+            .setColor(config.color)
+            .setAuthor(title, iconURL, event.repository.url)
+            .setDescription(lastEmbed.description + '\n' + history)
+        ]}).catch(console.error);
+      }
+    })
+    .catch(() => sendNewEmbed());
 };
