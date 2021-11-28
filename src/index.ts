@@ -7,7 +7,6 @@ import {githubWebhook} from './http/github/github.webhook';
 import {temporalFileServer} from './http/fileserver/temporal/temporal.file.server';
 
 // load environment variables
-require('dotenv').config();
 process.env.ROOT_DIR_PATH = path.join(__dirname, '..');
 
 (async function() {

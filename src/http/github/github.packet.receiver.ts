@@ -1,6 +1,6 @@
 import {Star} from './github.events';
 import {Client, MessageEmbed, TextChannel} from 'discord.js';
-import config from '../../config';
+import config from '../../../config';
 
 import onPush from './push.listener';
 import onPullRequest from './pull.request.listener';

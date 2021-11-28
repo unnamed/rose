@@ -1,4 +1,4 @@
-import config from '../../../config.js';
+import config from '../../../../config.js';
 import {TextChannel} from 'discord.js';
 import CommandBuilder from '../command.builder';
 

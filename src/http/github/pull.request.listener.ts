@@ -1,6 +1,6 @@
 import {PullRequestEvent} from './github.events';
 import {Client, MessageEmbed, TextChannel} from 'discord.js';
-import config from '../../config';
+import config from '../../../config';
 
 const supportedActions: string[] = ['opened', 'reopened', 'closed'];
 

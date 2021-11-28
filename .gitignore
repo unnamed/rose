@@ -2,8 +2,8 @@
 .idea
 *.iml
 
-# application secrets
-.env
+# application configuration (output)
+config.js
 
 # node packages
 /node_modules/

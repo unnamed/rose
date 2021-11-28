@@ -36,7 +36,7 @@ export function githubWebhook(client: Client): HttpModule {
 
         const sig = Buffer.from(signature);
         const signed = Buffer.from(
-          `sha1=${crypto.createHmac('sha1', process.env.GITHUB_SECRET)
+          `sha1=${crypto.createHmac('sha1', moduleConfig.secret)
             .update(data)
             .digest('hex')}`
         );

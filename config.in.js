@@ -13,6 +13,9 @@ export default {
     '278642935426449418', // Toamto
     '159425331143507968', // Neerixx
   ],
+  discord: {
+    token: 'YOUR TOKEN HERE!'
+  },
   http: {
     port: 2346,
     // enable if running behind a reverse proxy
@@ -21,7 +24,8 @@ export default {
     modules: {
       githubWebhook: {
         enabled: true,
-        route: '/github-webhook'
+        route: '/github-webhook',
+        secret: 'YOUR SECRET HERE!'
       },
       temporalFileServer: {
         enabled: true,

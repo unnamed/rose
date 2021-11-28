@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "type": "commonjs",
   "scripts": {
-    "prebuild": "bash makeenv",
+    "config": "node script/create_config.js",
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node build/index.js",
@@ -45,7 +45,6 @@
     "crypto": "^1.0.1",
     "discord-api-types": "^0.23.1",
     "discord.js": "^13.1.0",
-    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1"
   }

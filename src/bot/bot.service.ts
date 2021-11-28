@@ -3,7 +3,7 @@ import logger from '../log';
 
 import loadListeners from './loader/listener.loader';
 import loadCommands from './loader/command.loader';
-import config from '../config';
+import config from '../../config';
 
 /**
  * Starts the Discord Bot service using the token
@@ -18,7 +18,7 @@ export default async (): Promise<Client> => {
     logger.fine(`Discord Bot logged in as ${client.user.tag}`);
   });
 
-  await client.login(process.env.BOT_TOKEN);
+  await client.login(config.discord.token);
   const commands = await loadCommands(client);
 
   client.on('interactionCreate', async interaction => {

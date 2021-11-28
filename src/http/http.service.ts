@@ -1,7 +1,7 @@
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
-import config from '../config';
+import config from '../../config';
 import logger from '../log';
 
 export type HttpModule = (
