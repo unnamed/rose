@@ -30,8 +30,6 @@ export default async (client: Client, event: Push) => {
     return;
   }
 
-  // ignore this line
-
   channel.messages.fetch(lastEmbedMessageId)
     .then(lastEmbedMessage => {
       const lastEmbed = lastEmbedMessage.embeds[0];
