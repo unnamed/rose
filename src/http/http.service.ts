@@ -37,7 +37,10 @@ export class HttpServer {
       app.set('trust proxy', 1);
     }
 
-    app.use(fileUpload());
+    app.use(fileUpload({
+      // 5mb file size limit
+      limits: { fileSize: 5e+6 }
+    }));
     app.use(cors());
 
     logger.info(`Starting HTTP server with ${enabledModules.size} modules`);
