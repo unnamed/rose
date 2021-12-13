@@ -29,7 +29,7 @@ handlers.set('star', async (client: Client, event: Star) => {
     await channel.send({ embeds: [
       new MessageEmbed()
         .setColor(config.color)
-        .setTitle(`[${event.repository.full_name}] stared!`)
+        .setTitle(`[${event.repository.full_name}] starred!`)
         .setAuthor(event.sender.login, event.sender.avatar_url, event.sender.html_url)
         .setURL(event.repository.html_url)
         .setDescription(`Thank you ${event.sender.login} for the star!`)
