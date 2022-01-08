@@ -6,9 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "config": "node script/create_config.js",
-    "build": "tsc",
-    "prestart": "npm run build",
-    "start": "node build/src/index.js",
+    "start": "ts-node src/index.ts",
     "lint": "eslint src/**/* --ext .js,.ts"
   },
   "repository": {
