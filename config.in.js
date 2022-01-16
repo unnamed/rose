@@ -27,7 +27,7 @@ export default {
         route: '/tempfiles',
         lifetime: 5 * 60 * 1000, // file lifetime, 5 minutes should be enough
         limits: {
-          size: 200 * 1000, // 200KB should be enough
+          size: 5e+6, // 5MB by default
         }
       }
     }
