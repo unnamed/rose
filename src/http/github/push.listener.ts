@@ -6,7 +6,10 @@ let lastEmbedMessageId: string | undefined = undefined;
 
 export default async (client: Client, event: Push) => {
   const channel = await client.channels.fetch('805139625256419338') as TextChannel;
-  const branch = event.ref.split('/').pop();
+
+  // ref is always prefixed with "refs/heads/" or "refs/tags/"
+  const ref = event.ref;
+  const branch = ref.substring(ref.indexOf('/', 'refs/'.length) + 1);
   const repo = event.repository.full_name;
 
   const history = event.commits
