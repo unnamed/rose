@@ -31,7 +31,7 @@ export default class HttpServer {
       }
     });
 
-    if (!enabledModules) {
+    if (enabledModules.size === 0) {
       logger.info('No HTTP modules enabled, HTTP server won\'t start');
       return;
     }
