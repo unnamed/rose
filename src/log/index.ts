@@ -8,7 +8,7 @@ logger.handlers.push(stdHandler);
 if (process.env.ENVIRONMENT == 'DEV') {
   logger.minimumLevel = Levels.DEBUG.priority;
 } else {
-  logger.minimumLevel = Levels.INFO.priority;
+  logger.minimumLevel = Levels.FINE.priority;
 }
 
 export default logger;
