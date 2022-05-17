@@ -3,13 +3,14 @@
  * bot, contains style and names
  */
 export default {
-  color: 0xFFFFFF,
+  color: 0xff8df8,
   developers: [
     // developer ids
     '000000000000000000'
   ],
   discord: {
-    token: 'YOUR TOKEN HERE!'
+    // The Discord bot token here
+    token: null
   },
   http: {
     port: 2346,

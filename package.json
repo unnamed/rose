@@ -5,9 +5,8 @@
   "main": "src/index.ts",
   "type": "commonjs",
   "scripts": {
-    "config": "node script/create_config.js",
-    "start": "ts-node src/index.ts",
-    "dev": "ts-node src/index.ts",
+    "start": "yarn dev",
+    "dev": "node script/create_config.js && ts-node src/index.ts",
     "lint": "eslint src/**/* --ext .js,.ts"
   },
   "repository": {

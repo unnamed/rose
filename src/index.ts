@@ -6,9 +6,10 @@ import fileServer from './http/file.server';
 
 (async function() {
   const client = await startBot();
-  await new HttpServer()
-    .install('githubWebhook', githubWebhook(client))
-    .install('temporalFileServer', fileServer)
-    .start();
+  const server = new HttpServer();
+  if (client !== null) {
+    server.install('githubWebhook', githubWebhook(client));
+  }
+  server.install('temporalFileServer', fileServer);
+  await server.start();
 })().catch(console.error);
-
