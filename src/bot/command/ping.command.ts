@@ -1,4 +1,4 @@
-import CommandBuilder from '../command.builder';
+import CommandBuilder from './command.builder';
 
 export default new CommandBuilder()
   .setName('ping')

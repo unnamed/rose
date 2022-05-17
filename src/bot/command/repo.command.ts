@@ -1,12 +1,12 @@
 import fetch from 'node-fetch';
-import CommandBuilder from '../command.builder';
+import CommandBuilder from './command.builder';
 
 const baseUrl = 'https://repo.unnamed.team/service/rest/v1';
 
 export default new CommandBuilder()
   .setName('repo')
   .setDescription('Check the status of our Maven repository')
-  .setExecutor(async interaction => {
+  .setExecutor(async () => {
     let repositories;
     let ping;
 

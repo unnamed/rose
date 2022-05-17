@@ -1,7 +1,7 @@
-import {Client, CommandInteraction, Intents, MessageEmbed} from 'discord.js';
+import { Client, Intents } from 'discord.js';
 import logger from '../log';
 
-import loadCommands from './loader/command.loader';
+import loadCommands from './command.loader';
 import config from '../../config';
 
 /**
@@ -18,28 +18,6 @@ export default async (): Promise<Client> => {
   });
 
   await client.login(config.discord.token);
-  const commands = await loadCommands(client);
-
-  client.on('interactionCreate', async interaction => {
-    if (interaction.isCommand()) {
-      const commandInteraction = interaction as CommandInteraction;
-      const command = commands.get(commandInteraction.commandName);
-      if (command) {
-        try {
-          await command.executor(commandInteraction);
-        } catch (thrown) {
-          if (thrown.title !== undefined) {
-            await commandInteraction.reply({ embeds: [ {
-              color: config.color,
-              ...thrown
-            } as MessageEmbed ]});
-          } else {
-            console.error(thrown);
-          }
-        }
-      }
-    }
-  });
-
+  await loadCommands(client);
   return client;
 };

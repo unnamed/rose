@@ -1,5 +1,5 @@
-import {Push} from './github.events';
-import {Client, MessageEmbed, TextChannel} from 'discord.js';
+import { Push } from './github.events';
+import { Client, MessageEmbed, TextChannel } from 'discord.js';
 import config from '../../../config';
 
 let lastEmbedMessageId: string | undefined = undefined;

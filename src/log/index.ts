@@ -1,4 +1,4 @@
-import {Levels, Logger, stdHandler} from './logger';
+import { Levels, Logger, stdHandler } from './logger';
 
 // configure the default logger
 const logger = new Logger();

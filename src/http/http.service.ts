@@ -4,22 +4,27 @@ import cors from 'cors';
 import config from '../../config';
 import logger from '../log';
 
-export type HttpModule = (
-  app: express.Application,
-  config: NodeJS.Dict<any>
+export type HttpModule<T extends HttpModuleConfig> = (
+  router: express.Router,
+  config: T
 ) => Promise<void>;
 
-export class HttpServer {
+export interface HttpModuleConfig {
+  enabled: boolean;
+  route: string;
+}
 
-  private modules = new Map<string, HttpModule>();
+export default class HttpServer {
 
-  install(name: string, module: HttpModule): HttpServer {
+  private modules = new Map<string, HttpModule<any>>();
+
+  install(name: string, module: HttpModule<any>): HttpServer {
     this.modules.set(name, module);
     return this; // for a fluent api
   }
 
   async start() {
-    const enabledModules = new Map<string, HttpModule>();
+    const enabledModules = new Map<string, HttpModule<any>>();
     this.modules.forEach((module, name) => {
       if (config.http.modules[name].enabled) {
         enabledModules.set(name, module);
@@ -49,7 +54,9 @@ export class HttpServer {
       logger.info(`\tEnabling '${name}' module`);
       const enable = enabledModules.get(name);
       const moduleConfig = config.http.modules[name];
-      await enable(app, moduleConfig);
+      const router = express.Router();
+      await enable(router, moduleConfig);
+      app.use(moduleConfig.route, router);
     }
 
     await app.listen(config.http.port);

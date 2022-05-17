@@ -1,4 +1,4 @@
-/*
+/*!
  * Utility module exporting formatting
  * functions
  */

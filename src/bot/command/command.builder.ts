@@ -1,12 +1,11 @@
-import {SlashCommandBuilder} from '@discordjs/builders';
-import {CommandInteraction, PermissionResolvable} from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { CommandInteraction, PermissionResolvable } from 'discord.js';
 
 export type CommandExecutor = (interaction: CommandInteraction) => Promise<void>;
 
 export interface Command {
   data: any,
   executor: CommandExecutor;
-  permissions: PermissionResolvable[];
 }
 
 export default class CommandBuilder extends SlashCommandBuilder {
@@ -19,17 +18,10 @@ export default class CommandBuilder extends SlashCommandBuilder {
     return this;
   }
 
-  setPermissions(...permissions: PermissionResolvable[]): CommandBuilder {
-    this.permissions = permissions;
-    this.setDefaultPermission(false);
-    return this;
-  }
-
   build(): Command {
     return {
       data: this.toJSON(),
-      executor: this.executor,
-      permissions: this.permissions
+      executor: this.executor
     };
   }
 

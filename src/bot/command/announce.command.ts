@@ -1,6 +1,6 @@
-import config from '../../../../config.js';
-import {TextChannel} from 'discord.js';
-import CommandBuilder from '../command.builder';
+import config from '../../../config.js';
+import { TextChannel } from 'discord.js';
+import CommandBuilder from './command.builder';
 
 export default new CommandBuilder()
   .setName('announce')
