@@ -5,7 +5,7 @@
 # application configuration (output)
 config.js
 
-# node packages
+# libraries
 /node_modules/
 
 # output files
