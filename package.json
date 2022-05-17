@@ -7,7 +7,7 @@
   "scripts": {
     "start": "yarn dev",
     "dev": "node script/create_config.js && ts-node src/index.ts",
-    "lint": "eslint src/**/* --ext .js,.ts"
+    "lint": "eslint src/** --ext .js,.ts"
   },
   "repository": {
     "type": "git",
