@@ -5,6 +5,12 @@ import config from '../../../config';
 let lastEmbedMessageId: string | undefined = undefined;
 
 export default async (client: Client, event: Push) => {
+
+  // do not log commits for private repositories
+  if (event.repository.private) {
+    return;
+  }
+
   const channel = await client.channels.fetch('805139625256419338') as TextChannel;
 
   // ref is always prefixed with "refs/heads/" or "refs/tags/"
