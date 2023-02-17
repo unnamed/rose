@@ -5,6 +5,7 @@ import { Router } from 'express';
 
 import { handleData } from './github.packet.receiver';
 import { HttpModule, HttpModuleConfig } from '../http.service';
+import WritableStream = NodeJS.WritableStream;
 
 interface GitHubWebhookConfig extends HttpModuleConfig {
   secret: string;
@@ -54,7 +55,7 @@ export default function githubWebhook(client: Client): HttpModule<GitHubWebhookC
         } catch (e) {
           fail(e.message);
         }
-      }));
+      }) as unknown as WritableStream);
     });
   };
 }
