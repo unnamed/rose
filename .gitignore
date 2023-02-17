@@ -8,5 +8,8 @@ config.js
 # libraries
 /node_modules/
 
+# yarn
+/.yarn/
+
 # output files
 /build/
