@@ -2,7 +2,7 @@ import express from 'express';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
 import config from '../../config';
-import logger from '../log';
+import signale from 'signale';
 
 export type HttpModule<T extends HttpModuleConfig> = (
   router: express.Router,
@@ -32,7 +32,7 @@ export default class HttpServer {
     });
 
     if (enabledModules.size === 0) {
-      logger.info('No HTTP modules enabled, HTTP server won\'t start');
+      signale.info('No HTTP modules enabled, HTTP server won\'t start');
       return;
     }
 
@@ -48,19 +48,20 @@ export default class HttpServer {
     }));
     app.use(cors());
 
-    logger.info(`Starting HTTP server with ${enabledModules.size} modules`);
+    signale.info('Enabling %s HTTP modules...', enabledModules.size);
 
     for (const name of enabledModules.keys()) {
-      logger.info(`\tEnabling '${name}' module`);
       const enable = enabledModules.get(name);
       const moduleConfig = config.http.modules[name];
       const router = express.Router();
       await enable(router, moduleConfig);
       app.use(moduleConfig.route, router);
+      signale.success('\tEnabled \'%s\' module', name);
     }
 
     await app.listen(config.http.port);
-    logger.info(`HTTP server listening on port ${config.http.port}`);
+    signale.success('Started HTTP server with %s modules', enabledModules.size);
+    signale.success('HTTP server listening on port %s', config.http.port);
   }
 
 }

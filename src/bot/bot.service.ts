@@ -1,8 +1,8 @@
 import { Client, Intents } from 'discord.js';
-import logger from '../log';
 
 import loadCommands from './command.loader';
 import config from '../../config';
+import signale from 'signale';
 
 /**
  * Starts the Discord Bot service using the token
@@ -14,7 +14,7 @@ export default async (): Promise<Client | null> => {
   });
 
   client.on('ready', () => {
-    logger.fine(`Discord Bot logged in as ${client.user.tag}`);
+    signale.success('Discord Bot logged in as %s', client.user.tag);
   });
 
   if (config.discord.token) {
@@ -22,7 +22,7 @@ export default async (): Promise<Client | null> => {
     await loadCommands(client);
     return client;
   } else {
-    logger.info('No Discord token specified, bot won\'t start');
+    signale.info('No Discord Bot token specified, bot won\'t start');
     return null;
   }
 };

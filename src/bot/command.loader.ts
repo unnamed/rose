@@ -1,4 +1,4 @@
-import logger from '../log';
+import signale from 'signale';
 import { Command } from './command/command.builder';
 import { Client, CommandInteraction, MessageEmbed } from 'discord.js';
 import { REST } from '@discordjs/rest';
@@ -26,7 +26,7 @@ export default async function loadCommands(client: Client) {
     { body: commands.map(command => command.data) }
   );
 
-  logger.info(`Successfully loaded ${commands.length} commands`);
+  signale.success('Successfully loaded %s commands', commands.length);
 
   // start listening for command interactions
   client.on('interactionCreate', async interaction => {
