@@ -1,7 +1,6 @@
 import { Push } from './github.events';
 import { Client, MessageEmbed, TextChannel } from 'discord.js';
 import config from '../../../config';
-import {autoUpdate} from '../../util/update';
 
 let lastEmbedMessageId: string | undefined = undefined;
 
@@ -39,15 +38,8 @@ export default async (client: Client, event: Push) => {
     ]})).id;
   }
   
-  function restartIfSelf() {
-    if (event.repository.full_name === 'unnamed/rose') {
-      autoUpdate();
-    }
-  }
-  
   if (!lastEmbedMessageId) {
     await sendNewEmbed();
-    restartIfSelf();
     return;
   }
 
@@ -57,21 +49,15 @@ export default async (client: Client, event: Push) => {
 
       if (lastEmbed.author.name !== title
         || (lastEmbed.description.match(/\n/g) ?? []).length > 7) {
-        sendNewEmbed()
-          .then(() => restartIfSelf())
-          .catch(console.error);
+        sendNewEmbed().catch(console.error);
       } else {
         lastEmbedMessage.edit({ embeds: [
           new MessageEmbed()
             .setColor(config.color)
             .setAuthor(title, iconURL, event.repository.url)
             .setDescription(lastEmbed.description + '\n' + history)
-        ]})
-          .then(() => restartIfSelf())
-          .catch(console.error);
+        ]}).catch(console.error);
       }
     })
-    .catch(() => {
-      sendNewEmbed().then(() => restartIfSelf());
-    });
+    .catch(() => sendNewEmbed());
 };
