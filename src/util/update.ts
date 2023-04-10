@@ -1,6 +1,6 @@
 import { spawn, execSync } from 'child_process';
 import signale from 'signale';
-import { openSync } from 'fs';
+import {existsSync, mkdirSync, openSync} from 'fs';
 
 export function autoUpdate(): boolean {
   const output = execSync('git pull').toString();
@@ -13,8 +13,11 @@ export function autoUpdate(): boolean {
   signale.info('Restarting process due to update');
 
   const file = 'logs/latest-out.log';
-  const out = openSync(file, 'a');
-  const err = openSync(file, 'a');
+  if (!existsSync('logs')) {
+    mkdirSync('logs');
+  }
+  const out = openSync(file, 'aw');
+  const err = openSync(file, 'aw');
 
   spawn(process.argv[1], process.argv.slice(2), {
     detached: true,
