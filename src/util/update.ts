@@ -4,6 +4,7 @@ import { openSync } from 'fs';
 
 export function autoUpdate(): boolean {
   const output = execSync('git pull').toString();
+
   if (output === 'Already up to date.\n') {
     signale.info('Tried to update but we are up to date');
     return false;
