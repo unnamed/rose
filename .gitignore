@@ -4,6 +4,7 @@
 
 # application configuration (output)
 config.js
+/logs/
 
 # libraries
 /node_modules/
