@@ -16,8 +16,8 @@ export function autoUpdate(): boolean {
   if (!existsSync('logs')) {
     mkdirSync('logs');
   }
-  const out = openSync(file, 'aw');
-  const err = openSync(file, 'aw');
+  const out = openSync(file, 'a');
+  const err = openSync(file, 'a');
 
   spawn(process.argv[1], process.argv.slice(2), {
     detached: true,
