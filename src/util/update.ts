@@ -1,6 +1,6 @@
 import { spawn, execSync } from 'child_process';
 import signale from 'signale';
-import {existsSync, mkdirSync, openSync} from 'fs';
+import { existsSync, mkdirSync, openSync } from 'fs';
 
 export function autoUpdate(): boolean {
   const output = execSync('git pull').toString();
