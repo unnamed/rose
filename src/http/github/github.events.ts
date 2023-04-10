@@ -16,6 +16,16 @@ export interface Repository {
   forks_count: number;
 }
 
+export interface Commit {
+  id: string;
+  author: {
+    name: string;
+    username: string;
+  },
+  url: string;
+  message: string;
+}
+
 export interface Organization {
   name: string;
 }
@@ -152,17 +162,7 @@ export interface Push {
   };
 
   // pushed commits
-  commits: [
-    {
-      id: string;
-      author: {
-        name: string;
-        username: string;
-      },
-      url: string;
-      message: string;
-    }
-  ];
+  commits: Commit[];
 
 }
 

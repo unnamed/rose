@@ -11,6 +11,10 @@ export default async (client: Client, event: Push) => {
     return;
   }
 
+  if (event.commits.length === 0) {
+    return;
+  }
+
   const channel = await client.channels.fetch('805139625256419338') as TextChannel;
 
   // ref is always prefixed with "refs/heads/" or "refs/tags/"
