@@ -28,7 +28,12 @@ export default {
         route: '/tempfiles',
         lifetime: 5 * 60 * 1000, // file lifetime, 5 minutes should be enough
         limits: {
-          size: 5e+6, // 5MB by default
+          // The file size limit for the temporal file server,
+          // (5MB by default) Please note that some reverse proxies
+          // like Nginx have their own limit (Default Nginx limit is 1MB)
+          // and you must configure that manually (With the client_max_body_size
+          // option)
+          size: 5e+6,
         }
       }
     }
