@@ -14,3 +14,6 @@ config.js
 
 # output files
 /build/
+
+# data
+/data/

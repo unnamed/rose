@@ -8,6 +8,9 @@ import config from '../../config';
 import AnnounceCommand from './command/announce.command';
 import PingCommand from './command/ping.command';
 import RepoCommand from './command/repo.command';
+import SpigotCommand from './command/spigot.command';
+import SpigotUnlinkCommand from './command/spigot-unlink.command';
+import RequestCommand from './command/request.command';
 
 const COOLDOWN_EXPIRY_TIME = 5 * 1000;
 
@@ -16,7 +19,10 @@ export default async function loadCommands(client: Client) {
   const commands = [
     AnnounceCommand,
     PingCommand,
-    RepoCommand
+    RepoCommand,
+    SpigotCommand,
+    SpigotUnlinkCommand,
+    RequestCommand
   ];
   const commandMap = commands.reduce((map, command) => map.set(command.data.name, command), new Map<string, Command>());
 
@@ -81,13 +87,18 @@ export default async function loadCommands(client: Client) {
       await command.executor(commandInteraction);
     } catch (thrown) {
       if (thrown.title !== undefined) {
+        const ephemeral = thrown.ephemeral;
+        if (ephemeral) {
+          delete thrown.ephemeral;
+        }
         await commandInteraction.reply({
           embeds: [
             {
               color: config.color,
               ...thrown
             } as MessageEmbed
-          ]
+          ],
+          ephemeral
         });
       } else {
         console.error(thrown);

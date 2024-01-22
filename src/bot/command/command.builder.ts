@@ -18,6 +18,11 @@ export default class CommandBuilder extends SlashCommandBuilder {
     return this;
   }
 
+  let(func: (_this: CommandBuilder) => any): this {
+    func(this);
+    return this;
+  }
+
   build(): Command {
     return {
       data: this.toJSON(),
